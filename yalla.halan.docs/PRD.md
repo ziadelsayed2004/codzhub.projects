@@ -50,6 +50,7 @@ Future and retired concepts are listed only at the end so the active product sco
   - [23. Pricing Rules](#23-pricing-rules)
   - [24. Delivery Fee Technical Rules](#24-delivery-fee-technical-rules)
   - [25. Finance and Invoice Rules](#25-finance-and-invoice-rules)
+    - [Merchant Commission Grace and Discount Cost Sharing](#merchant-commission-grace-and-discount-cost-sharing)
   - [26. Flash Sale Billing Rules](#26-flash-sale-billing-rules)
   - [27. Cashback Points Rules](#27-cashback-points-rules)
   - [28. Merchant Category Rules](#28-merchant-category-rules)
@@ -208,8 +209,8 @@ flowchart LR
 | Cart | Customer can add items from multiple merchants. | Items remain grouped by merchant portion. |
 | Item notes | Customer can write an optional note on each product line. | Notes are visible to the merchant for preparation. |
 | Checkout | Customer reviews subtotal, coupon, cashback points, birthday discount when eligible, delivery fee, and total. | Server pricing is the final truth. Delivery fee uses Google Routes distance when available: fixed amount or meter opening amount including first 1 km plus additional per-km rate after the first km. |
-| Coupons | Customer can apply admin coupons. | Coupons are percentage discounts with a maximum cap. |
-| Discount funding and settlement | Updated active product truth. | Platform-funded discounts, including coupon-code discounts, birthday loyalty discounts, and free-delivery savings, reduce the platform share/amount due and are not charged to the merchant. Merchants fund only their own created product offers, flash-sale plan/usage costs, and redeemed-points discounts when an active merchant portion has a valid admin-rule redemption snapshot. |
+| Coupons | Customer can apply admin coupons created from the Admin Dashboard. | Each coupon has a percentage, one maximum EGP cap, and merchant scope: all merchants, selected merchants only, or all merchants except selected merchants. In a multi-merchant order the coupon applies only to eligible active merchant portions. |
+| Discount funding and settlement | Updated active product truth. | Coupon and birthday discounts are split using admin-configured merchant contribution percentages, default 0% with optional merchant overrides; the platform funds the remainder. The driver pays each merchant the server-calculated payout after merchant-funded discounts, while platform-funded shares become credits on the compulsory driver daily invoice. Free delivery stays platform-funded. Merchant offers, flash sales, and valid points redemption keep their existing merchant-funded rules. |
 | Cashback points | Customer sees cashback points balance/history and can redeem points at eligible merchants. | Points are not cash and cannot be topped up, withdrawn, or transferred. |
 | Weekly orders | Customer can create from a delivered recent order or build a new template after clearing the cart. | Create/edit/Order Now/reminder loading always replaces the cart, remains editable, and requires explicit normal checkout confirmation. |
 | Status and live tracking | Customer sees one clear order timeline, receives notifications when a merchant portion is cancelled or timed out, and sees the assigned driver live on the order map during active delivery. | Live GPS starts only after driver assignment for active delivery, expires by TTL, and should not store unnecessary long-term raw history. Cancelled merchant notifications include a Browse Products action. |
@@ -233,8 +234,8 @@ flowchart LR
 | Preparation | Merchant product records include default preparation time. On acceptance the merchant can adjust preparation time using repeated +/- 5 minute controls and choose normal vs large-capacity eligibility. | The system computes readiness and driver visibility; merchant ready/handoff buttons are not required. The platform records preparation duration so fastest, slowest, and average preparation-time metrics can be shown. |
 | Products | Merchant adds/edits products with image, stock state, admin-assigned category, subcategory, details, optional offer, optional size/pricing choices, and optional related subcategory groups. | Product category must belong to merchant’s active admin-assigned category list. At least one active price choice is required: Standard only, or one or more active sizes such as S/M/L with their own prices. Related groups can only point to visible sibling subcategories under the same selected parent category. |
 | Categories | Merchant can view assigned platform categories only. | Category add/edit/remove is admin-managed after onboarding; merchant app/dashboard must not expose category assignment mutation controls. |
-| Flash sales | Merchant can launch limited flash-sale promotions. | Free quota applies first; paid usage is billed weekly. |
-| Invoices | Merchant sees weekly invoice breakdown and uploads payment proof. | Commission, merchant-created offers, flash-sale cost, redeemed-points cost, and payment proof must be separated. |
+| Flash sales | Merchant can launch limited flash-sale promotions while approved and eligible under the existing flash rules. | Commission grace and an effective 0% commission do not block flash sales. Existing free allowance, paid weekly plan, duration, product/account eligibility, moderation, and weekly invoice billing remain authoritative. |
+| Invoices | Merchant sees weekly invoice breakdown and uploads payment proof. | Commission grace, normal commission, paid flash-sale cost, redeemed-points cost, and payment proof are separated. Coupon/birthday merchant shares already deducted from the driver-to-merchant payout appear only as reconciliation rows and are never charged again. |
 | Dashboard | Merchant sees sales, commission, order, rating, product performance, and preparation-time metrics. | Metrics should separate revenue from amounts due to platform and show fastest/slowest/average preparation time plus sample count when available. |
 | Ratings and reputation | Merchant rating is not an independent manual score. It is derived from ratings received by the merchant's products/merchant portions. | Product ratings are averaged per product, then merchant rating is recomputed from all product-rating documents or product averages weighted by rating count. This keeps the merchant score tied to real delivered products. |
 | Driver approaching pickup | Merchant can receive a near-arrival notification when the assigned driver is close to pickup. | Thresholds are admin-configurable by distance and/or ETA; each stop/event is sent once and deduplicated by order, stop, and event type. |
@@ -286,9 +287,9 @@ Preparation-time stats must ignore cancelled/rejected/timeout-cancelled merchant
 | Zones and locations | Manage service zones, account zone assignment, Google Maps/API readiness, live tracking thresholds, and stored lat/lng location snapshots when needed. |
 | Accounts | Browse customers, merchants, drivers; suspend/reactivate where allowed. Merchant account lists should expose fastest, slowest, and average preparation-time metrics. |
 | Ratings and quality | Monitor merchant-product bundle ratings, derived product/merchant aggregates, and optional customer-to-driver ratings; audit inappropriate comments; trigger safe recomputation if required. Customer/driver-to-customer rating is retired from the active scope. |
-| Finance | Configure merchant/driver commission defaults and overrides, delivery fee meter pricing, invoices, payment instructions. |
+| Finance | Configure merchant/driver commission defaults and overrides, merchant commission-free order threshold defaults/overrides, coupon/birthday merchant-contribution percentages, driver-to-merchant payout rules, daily driver credits, delivery fee pricing, invoices, credits, and payment instructions. |
 | Flash sales | Configure free launches on/off, free launch count/duration/renewal, paid weekly plan count/duration/price, and billing rules. |
-| Coupons | Create percentage coupons with maximum discount cap. |
+| Coupons | Create percentage coupons with a maximum cap and choose merchant scope: all, selected only, or all except selected merchants. |
 | Cashback points | Choose eligible merchants and set point-to-money redemption value per merchant. |
 | OTP channels | Configure customer-only WhySMS SMS OTP, custom WhatsApp OTP availability, cooldowns, channel switch limits, failed-attempt lockout, and abuse controls. Runtime availability and shared limits are active; admin UI controls remain a frontend/admin-surface step. |
 | Birthday loyalty | Enable/disable birthday loyalty, set max discount percent, product price cap, order subtotal cap, notification hour, and reports. |
@@ -420,8 +421,9 @@ Coupons are simple customer-facing discounts.
 
 | Field | Meaning |
 |---|---|
-| Discount percent | Percentage discount applied to eligible merchandise subtotal. |
-| Maximum discount cap | Maximum EGP amount that the coupon can deduct. |
+| Discount percent | Percentage discount applied to the eligible merchant merchandise subtotal. |
+| Maximum discount cap | One maximum EGP amount for the complete coupon discount, not one cap per merchant. |
+| Merchant scope | `all`, `include`, or `exclude`; admin chooses all merchants, selected merchants only, or all except selected merchants. |
 | Active dates | Optional start/end window. |
 | Usage limits | Optional total or per-customer usage control. |
 
@@ -496,19 +498,20 @@ Birthday loyalty is a controlled admin feature. It rewards customers on their bi
 | Notifications | Birthday push notification is sent in the morning; first app open on birthday can show popup/confetti. |
 | Admin reports | Reports show eligible customers, notified customers, used birthday discounts, total discount amount, and per-date/month reporting. |
 
-#### Platform-funded coupon/birthday and merchant-funded points settlement
+#### Coupon/birthday cost sharing and merchant-funded points settlement
 
-Coupon-code discounts and birthday loyalty discounts are customer-facing savings funded by the platform, not by merchants. Checkout permits only one platform-funded customer benefit: coupon and birthday discounts cannot coexist, and either positive discount suppresses free delivery. A coupon submitted for a birthday-eligible checkout returns `ORDER_DISCOUNT_BENEFIT_CONFLICT`; the client removes the coupon to retain birthday pricing. Redeemed cashback points remain a separate merchant-funded mechanism and may coexist when an active merchant portion has a valid admin-rule redemption snapshot. Flash-sale weekly plan fees remain merchant-funded and are added to the merchant weekly invoice as a separate line item. Admin reports must expose platform-funded coupon, birthday, and free-delivery amounts separately from merchant-funded points, merchant-created product offer pricing effects, and flash-sale fees.
+Coupon-code and birthday discounts remain customer-facing platform promotions, but their internal funding is split by admin policy. The global merchant contribution defaults to `0%` for each type and may be overridden per merchant; the remaining amount is platform-funded. Admin-authored coupons also store merchant scope (`all`, `include`, or `exclude`), discount percentage, and one maximum EGP cap. Checkout still permits only one coupon/birthday/free-delivery benefit: coupon and birthday cannot coexist, and either positive discount suppresses free delivery. Free delivery remains fully platform-funded. The driver pays each merchant the server-derived payout after merchant-funded shares, and platform-funded shares reduce the driver daily invoice. Redeemed cashback points, referral points, merchant-created product offers, and flash-sale responsibilities keep their existing rules. Every order stores merchant/platform funding and scope snapshots so later settings do not rewrite historical settlement.
 
 <a id="14-flash-sales"></a>
 
 ## 14. Flash Sales
 
-Flash sales are merchant promotions controlled by admin rules. They are not billed by the hour. After the free allowance is used, the merchant must use an admin-configured weekly paid plan/subscription if paid usage is enabled.
+Flash sales are merchant promotions controlled by admin rules. Commission grace or an effective `0%` merchant commission does not block create, activate, update, or reschedule. Flash sales are not billed by the hour; after the existing free allowance is used, the merchant must use an admin-configured weekly paid plan/subscription if paid usage is enabled.
 
 | Rule | Product Meaning |
 |---|---|
-| Free launches enabled | Admin can enable or disable the free flash-sale allowance. |
+| Commission independence | Commission grace and effective `0%` commission do not affect flash-sale availability. |
+| Free launches enabled | Admin can enable or disable the free flash-sale allowance for eligible approved merchants. |
 | Free launch count | Admin sets how many launches are free. Default product rule: 3 free launches. |
 | Free launch duration | Admin sets max duration for each free launch. Default product rule: 1 hour per free launch. |
 | Renewal mode | Admin decides whether free launches renew weekly or are lifetime-only. |
@@ -629,12 +632,13 @@ Market Home uses separate settlement rules for merchants and drivers.
 | Component | Rule |
 |---|---|
 | Commission base | Completed merchant merchandise value for the week. |
-| Commission percent | Merchant custom percent if set; otherwise global merchant default. |
-| Platform-funded discounts | Coupon-code discounts and birthday loyalty discounts are not charged to the merchant. They reduce the platform share/amount due where applicable and must be reported separately for admin audit. |
-| Merchant-funded product offers | Product offers created by the merchant are borne by that merchant because they were created/approved by the merchant. |
-| Flash-sale costs | Paid weekly flash-sale plan/subscription cost after free allowance is borne by the merchant and added as a separate invoice component. |
+| Commission percent | Merchant custom percent if set; otherwise global merchant default. It applies only after the commission-free threshold. |
+| Coupon/birthday funding split | Admin sets default merchant contribution percentages and optional merchant overrides. The merchant and platform shares are snapshotted per active merchant portion. Free delivery remains fully platform-funded. |
+| Merchant payout reconciliation | The driver pays the merchant the exact server-calculated merchandise payout after merchant-funded coupon/birthday shares and valid redeemed points. Platform-funded shares bridge the customer-payment difference. |
+| Merchant-funded product offers | Product offers and flash-sale item prices created by the merchant are borne by that merchant through the price snapshot. |
+| Flash-sale costs | Paid weekly flash-sale plan/subscription cost is borne by the merchant and added as a separate weekly invoice component, including while commission grace is active. |
 | Redeemed points | Cashback-point redemption cost is borne by the merchant only when the active merchant portion has a valid admin-rule redemption snapshot. |
-| Total due | Net merchant platform commission + merchant-funded flash-sale and points components, with platform-funded coupon/birthday discounts excluded from merchant liability. |
+| Total due | Portion-level net commission after grace + paid flash-sale fees + other unsettled merchant liabilities. Coupon/birthday/points amounts already deducted from merchant payout are informational reconciliation rows only and must not be charged again. |
 | Proof | Merchant uploads payment proof. Admin approves/rejects. |
 
 ### Driver Daily Invoice
@@ -644,11 +648,11 @@ Market Home uses separate settlement rules for merchants and drivers.
 | Settlement cadence | Daily, compulsory. Driver must settle each day. |
 | Commission base | Completed driver delivery value/earnings for the day. |
 | Commission percent | Driver custom percent if set; otherwise global driver default. |
-| Platform-funded offsets | Free-delivery cost reduces the driver/platform share or amount due and is shown as a separate driver/admin settlement component. Merchant-side coupon and birthday platform-funded offsets remain reported on merchant/admin settlement views. |
+| Platform-funded credits | The platform-funded coupon, birthday, and free-delivery shares are shown separately and reduce the compulsory driver daily invoice because the driver paid the merchant those platform-funded amounts. |
 | Discount incompatibility | Coupon-code and birthday loyalty discounts cannot coexist. Either positive discount suppresses free delivery; a conflicting checkout returns `ORDER_DISCOUNT_BENEFIT_CONFLICT` with `suggestedAction=remove_coupon`. Cashback redemption remains separate and may coexist under its merchant-funded admin rules. |
 | Payment methods | Wallet or InstaPay inside the app with receipt image upload; or cash at Market Home headquarters. |
 | Admin cash handling | If paid cash at headquarters, admin drops/settles the driver invoice from the dashboard with audit note and settlement actor. |
-| Total due | Gross driver/platform commission minus platform-funded offsets, floored at zero. |
+| Total due | Gross daily driver/platform liability minus platform-funded credits. Any excess credit remains explicit instead of disappearing at a zero floor. |
 
 ### Merchant Order Print Receipt
 
@@ -694,7 +698,7 @@ Chat alert rule: the driver Alert/Ring action is not a voice call and does not o
 | Merchant category assignment | Merchant can view assigned categories; category add/edit/remove is admin-managed and hidden from merchant mutation surfaces. |
 | Finance | Weekly invoices show commission, flash-sale costs, total due, and proof status. |
 | Flash sales | Free launches on/off, free count/duration/renewal, paid weekly plan count/duration/price, and weekly invoice billing are clear. |
-| Coupons | Percentage discount + maximum cap is clear. |
+| Coupons | Percentage, one maximum cap, and all/include/exclude merchant scope are clear. |
 | Cashback/referrals | Points are not cash; cashback and referral earning/redemption rules are clear. Referral inviter reward waits for invited customer first delivered order. |
 | Admin | Super Admin creates staff and assigns sections. |
 
@@ -839,11 +843,13 @@ flowchart TD
 |---|---|
 | Merchant default commission | Admin sets platform default merchant percent. |
 | Merchant override | Admin can set custom percent for one merchant; custom wins over default. |
+| Commission-free threshold | Admin sets a global default count, default `0`, and may override it per merchant. The first N eligible delivered merchant portions use `0%`; normal commission starts at N+1. |
+| Eligible count | One delivered active merchant portion counts once. Rejected/cancelled/timeout/non-delivered/test portions and item quantities do not count. |
 | Driver default commission | Admin sets platform default driver percent. |
 | Driver override | Admin can set custom percent for one driver; custom wins over default. |
-| Merchant weekly invoice | Merchant commission plus merchant-funded components: merchant-created product offer pricing effects, paid flash-sale plan/usage, and redeemed-points cost when an active merchant portion has a valid admin-rule redemption snapshot. |
-| Platform-funded discounts | Coupon-code discounts, birthday loyalty discounts, and free-delivery savings are platform-funded and must not be charged to merchants. They reduce/report against the platform share/amount due. |
-| Driver daily invoice | Driver invoice is generated/settled daily and is compulsory. It supports Wallet/InstaPay proof upload or cash-at-HQ admin drop/settlement. |
+| Merchant weekly invoice | Weekly commission settlement plus paid flash-sale plan/usage and other unsettled merchant liabilities. Coupon/birthday/points amounts already deducted from merchant payout are reconciliation-only and must not be charged again. |
+| Promotion funding split | Coupon and birthday discounts use admin-configured merchant contribution percentages with defaults `0%` and optional merchant overrides; the remainder is platform-funded. The driver pays the merchant the server-derived payout after merchant-funded shares, and platform-funded shares reduce the driver's compulsory daily invoice. Free delivery remains fully platform-funded. |
+| Driver daily invoice | Driver invoice is generated/settled daily and is compulsory. It contains explicit platform-funded coupon, birthday, and free-delivery credits, and supports Wallet/InstaPay proof upload or cash-at-HQ admin drop/settlement. |
 | Discount exclusivity | Free delivery cannot be used with coupon-code discounts or birthday loyalty discounts on the same checkout/order. |
 | Payment proof | Merchant/driver uploads proof for Wallet/InstaPay payments; admin approves/rejects. Cash-at-HQ driver payment is settled by admin with audit note. |
 | Overdue handling | Overdue unpaid invoices can restrict/suspend the account according to platform rules. |
@@ -1098,11 +1104,11 @@ This appendix records the current UI audit without changing the accepted product
 
 ## Phase 38 UI/Finance Update - Active Product Truth Snapshot
 
-This snapshot supersedes older wording that charged coupon-code or birthday loyalty discounts to merchants or treated driver invoices as weekly only.
+This historical Phase 38 snapshot is superseded for coupon/birthday funding by Phase 46. Driver-daily settlement truth remains active.
 
 1. Driver invoices are daily and compulsory. Wallet/InstaPay payment uses in-app receipt upload; cash payment at headquarters is settled/dropped by admin from the dashboard.
-2. Coupon-code discounts, birthday loyalty discounts, and free-delivery savings are platform-funded. They reduce/report against the platform share/amount due and are not merchant liabilities.
-3. Merchants carry only the costs they explicitly control or accepted: merchant-created product offers, flash-sale plan/usage costs, and redeemed-points discounts when an active merchant portion has a valid admin-rule redemption snapshot.
+2. Free-delivery savings remain fully platform-funded. Coupon and birthday discounts now use the Phase 46 admin-configured merchant contribution split, with default 0% and optional merchant overrides.
+3. Merchants also carry merchant-created product offers, flash-sale plan/usage costs, valid redeemed-points discounts, and their configured coupon/birthday contribution.
 4. Free delivery cannot be combined with coupon-code discounts or birthday loyalty discounts in the same checkout/order.
 5. Merchant print receipt is a new accepted requirement: print a restaurant-only receipt with merchant name, order number, order ID, driver name, code, and merchant portion contents. Market Home branding and platform finance data must not appear on the receipt.
 
@@ -1206,8 +1212,8 @@ Suggested body shape:
 - Admin can configure `maxMerchantsPerOrder`; default is **4** distinct merchants per customer order.
 - Admin can configure `freeDeliveryMaxSubsidyEgp`; default is **30 EGP** per eligible order.
 - Checkout must enforce a single benefit per order: no free delivery with coupon or birthday discount, and no coupon + birthday discount together.
-- Platform absorbs free delivery subsidy, coupon discount, and birthday discount in settlement.
-- Merchant absorbs only merchant-created offers, flash sales, and points/cashback redemption when enabled and priced by admin.
+- Free delivery remains fully platform-funded. Coupon and birthday funding is superseded by Phase 46: admin sets merchant contribution percentages (default 0%, optional merchant overrides) and the platform funds the remainder.
+- Merchant-created offers, flash sales, and eligible points/cashback redemption remain merchant-funded under their existing rules.
 - Driver daily invoice settlement is mandatory: HQ cash write-off by admin, wallet, or InstaPay with receipt upload.
 - Admin dashboard is desktop-first and complex: RBAC, section permissions, staff traffic/presence, finance controls, merchant operations console, and audit logs.
 - Merchant surface is production-bound; customer/driver web surfaces are testing/integration packs unless real frontend source is added.
@@ -1225,3 +1231,52 @@ Drivers can toggle their new-order bell and Do Not Disturb preference without ch
 ### Delivery handoff rule: door vs building entrance
 
 Customers can confirm whether the order should be delivered to the apartment door (`door`) or handed over under/outside the building (`building_entrance`). Optional short instructions are allowed. The assigned driver must see this rule during navigation/drop-off and acknowledge it before final delivery confirmation. Admin order details should show the selected handoff rule and acknowledgement state.
+
+
+<a id="merchant-commission-grace-and-discount-cost-sharing"></a>
+
+## Phase 46 — Merchant Commission Grace, Coupon Scope, and Discount Settlement
+
+This section supersedes older platform-only coupon/birthday wording and the retired idea that flash sales should be blocked during commission grace.
+
+### Commission grace
+
+- `defaultFreeOrderThreshold` defaults to `0`.
+- Admin may set `freeOrderThresholdOverride` per merchant; null means inherit the default.
+- One eligible order means one active merchant portion that reaches delivered state.
+- First N eligible delivered portions use `0%` commission; N+1 uses the normal effective merchant commission.
+- Counting is cumulative, atomic, and idempotent per order + merchant.
+- Historical settlement snapshots are immutable. A setting change affects future deliveries only.
+- Merchant weekly invoices aggregate portion-level commission snapshots so a mid-week threshold crossing is calculated correctly.
+
+### Admin coupon merchant scope
+
+- New coupons use a percentage and one required maximum EGP cap.
+- Admin chooses `all`, `include`, or `exclude` merchant scope.
+- In multi-merchant checkout, only matching active merchant portions form the eligible coupon subtotal.
+- The cap applies once to the complete coupon discount, then the final amount is allocated proportionally with deterministic rounding.
+- A coupon matching no active cart merchant returns `COUPON_NOT_APPLICABLE_TO_ORDER_MERCHANTS` and is not consumed.
+- Repricing after rejection/timeout recalculates over remaining active eligible portions.
+
+### Funding, merchant payout, and invoices
+
+- Default merchant contribution for coupon and birthday is `0%`, with optional per-merchant overrides.
+- Free delivery remains 100% platform-funded. Product offers, flash-sale price effects, points, and referrals keep their existing ownership rules.
+- The driver pays each merchant the server-calculated payout after merchant-funded coupon/birthday shares and valid redeemed points.
+- Platform-funded coupon/birthday/free-delivery shares become explicit credits that reduce the compulsory driver daily invoice.
+- Merchant invoices remain weekly; driver invoices remain daily.
+- A merchant-funded amount deducted from pickup payout may appear as an invoice reconciliation row but must never be charged a second time.
+- Historical order, payout, and invoice snapshots remain immutable.
+
+### Flash-sale independence
+
+- Flash sales stay available during commission grace and effective `0%` commission.
+- Do not create or return `FLASH_DEAL_COMMISSION_GRACE_ACTIVE`.
+- Existing free allowance, paid weekly plan, duration, product/account eligibility, moderation, and admin controls remain authoritative.
+- Paid flash-sale plan/usage cost stays on the merchant weekly invoice.
+
+### Admin, merchant, customer, and driver surfaces
+
+Admin needs commission defaults/overrides, contribution policies, coupon all/include/exclude merchant selection, payout/daily-credit/weekly-invoice audit, and reports. Merchant needs grace progress, exact order payout, weekly reconciliation, and flash access without a grace block. Customer needs clear coupon applicability without internal funding data. Driver needs exact server-calculated merchant payout and daily platform-credit breakdown.
+
+Full implementation handoff: `backend/docs/MERCHANT_COMMISSION_GRACE_AND_PROMOTION_COST_SHARING_HANDOFF.md`.
