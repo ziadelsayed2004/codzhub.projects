@@ -1,0 +1,1568 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Sadat Real Estate Platform - PRD by CodzHub</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Lemonada:wght@300..700&display=swap');
+
+    :root {
+      --bg: #f4f7fb;
+      --paper: #ffffff;
+      --ink: #102033;
+      --muted: #627086;
+      --line: #dce5f1;
+      --brand: #1677d2;
+      --brand-dark: #0a4e97;
+      --green: #12864e;
+      --gold: #c79020;
+      --red: #c2413a;
+      --soft-blue: #eaf4ff;
+      --soft-green: #eaf8f0;
+      --soft-gold: #fff7e5;
+      --soft-red: #fff0ef;
+      --radius: 18px;
+      --shadow: 0 18px 44px rgba(16, 32, 51, .08);
+    }
+
+    * { box-sizing: border-box; }
+    *:focus,
+    *:focus-visible {
+      outline: none;
+      box-shadow: none;
+    }
+
+    svg,
+    use,
+    .mark,
+    .brand-wordmark {
+      outline: 0;
+      -webkit-user-select: none;
+      user-select: none;
+    }
+
+    ::selection {
+      background: rgba(22, 119, 210, .16);
+      color: inherit;
+    }
+
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--ink);
+      font-family: "Lemonada", "DejaVu Sans", Tahoma, Arial, cursive;
+      font-size: 80%;
+      line-height: 1.85;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    a { color: inherit; text-decoration: none; }
+    .shell {
+      display: grid;
+      grid-template-columns: 320px minmax(0, 1fr);
+      gap: 24px;
+      width: min(1440px, calc(100% - 40px));
+      margin: 0 auto;
+      padding: 24px 0 48px;
+      transition: grid-template-columns .36s cubic-bezier(.22, 1, .36, 1), gap .36s cubic-bezier(.22, 1, .36, 1), width .36s cubic-bezier(.22, 1, .36, 1);
+    }
+
+    .sidebar {
+      position: sticky;
+      top: 24px;
+      align-self: start;
+      width: 100%;
+      height: calc(100vh - 48px);
+      overflow: hidden;
+      background: var(--paper);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 18px;
+      min-width: 0;
+      display: flex;
+      flex-direction: column;
+      transform-origin: right center;
+      transition:
+        opacity .26s ease,
+        transform .36s cubic-bezier(.22, 1, .36, 1),
+        visibility .26s ease,
+        border-color .26s ease,
+        padding .26s ease;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 8px 6px 18px;
+      border-bottom: 1px solid var(--line);
+      margin-bottom: 12px;
+      flex: 0 0 auto;
+    }
+
+    .mark {
+      flex: 0 0 auto;
+      width: 46px;
+      height: 46px;
+      display: grid;
+      place-items: center;
+      border-radius: 0;
+      background: transparent;
+      border: 0;
+      overflow: visible;
+      user-select: none;
+    }
+
+    .mark *,
+    .brand-wordmark * {
+      pointer-events: none;
+    }
+
+    .mark svg { width: 46px; height: 46px; display: block; background: transparent; }
+    .brand-lockup {
+      min-width: 0;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+    .brand-wordmark svg {
+      display: block;
+      width: 138px;
+      max-width: 100%;
+      height: auto;
+      margin: -22px 0 -24px;
+      user-select: none;
+    }
+    .brand span { display: block; color: var(--muted); font-size: 12px; line-height: 1.5; }
+
+    .toc-title {
+      margin: 10px 6px 10px;
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: .6px;
+      flex: 0 0 auto;
+    }
+
+    .toc-scroll {
+      flex: 1 1 auto;
+      min-height: 0;
+      overflow-y: auto;
+      overflow-x: hidden;
+      padding-inline-end: 4px;
+      margin-inline-end: -4px;
+      scrollbar-width: thin;
+      scrollbar-color: rgba(22, 119, 210, .34) transparent;
+    }
+
+    .toc-scroll::-webkit-scrollbar { width: 8px; }
+    .toc-scroll::-webkit-scrollbar-track { background: transparent; }
+    .toc-scroll::-webkit-scrollbar-thumb {
+      background: rgba(22, 119, 210, .28);
+      border-radius: 999px;
+      border: 2px solid transparent;
+      background-clip: padding-box;
+    }
+
+    .toc-scroll::-webkit-scrollbar-thumb:hover {
+      background: rgba(22, 119, 210, .44);
+      background-clip: padding-box;
+    }
+
+    .toc {
+      display: grid;
+      gap: 8px;
+      margin: 0;
+      padding: 0 0 4px;
+      list-style: none;
+    }
+
+    .toc a {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      min-height: 44px;
+      padding: 10px 12px;
+      border: 1px solid transparent;
+      border-radius: 14px;
+      color: #263b55;
+      background: #f8fbff;
+      font-size: 13px;
+      font-weight: 800;
+      transition: background .18s ease, color .18s ease, border-color .18s ease, transform .18s ease;
+    }
+
+    .toc a:hover {
+      background: var(--soft-blue);
+      border-color: #cfe4f9;
+      color: var(--brand-dark);
+      transform: translateX(-2px);
+    }
+
+    .toc small {
+      display: grid;
+      place-items: center;
+      min-width: 28px;
+      height: 24px;
+      border-radius: 999px;
+      background: #fff;
+      color: var(--brand);
+      direction: ltr;
+      font-weight: 900;
+      font-size: 11px;
+    }
+
+    .toc-toggle {
+      position: fixed;
+      top: 18px;
+      inset-inline-start: 18px;
+      z-index: 80;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 46px;
+      height: 46px;
+      padding: 0;
+      border: 1px solid rgba(214, 226, 241, .78);
+      border-radius: 999px;
+      background: rgba(255, 255, 255, .88);
+      color: var(--brand-dark);
+      box-shadow: 0 14px 34px rgba(16, 32, 51, .14);
+      backdrop-filter: blur(14px);
+      cursor: pointer;
+      font: inherit;
+      transform: translateZ(0);
+      transition:
+        transform .22s ease,
+        background .22s ease,
+        box-shadow .22s ease,
+        color .22s ease;
+    }
+
+    .toc-toggle:hover {
+      transform: translateY(-1px);
+      background: rgba(255, 255, 255, .96);
+      box-shadow: 0 18px 38px rgba(16, 32, 51, .18);
+    }
+
+    .toc-toggle:active {
+      transform: translateY(0) scale(.98);
+    }
+
+    .toc-toggle-icon {
+      position: relative;
+      width: 20px;
+      height: 16px;
+      display: block;
+    }
+
+    .toc-toggle-icon span {
+      position: absolute;
+      inset-inline-start: 0;
+      display: block;
+      width: 100%;
+      height: 2px;
+      border-radius: 999px;
+      background: currentColor;
+      transition:
+        transform .28s cubic-bezier(.22, 1, .36, 1),
+        opacity .2s ease,
+        width .28s cubic-bezier(.22, 1, .36, 1);
+    }
+
+    .toc-toggle-icon span:nth-child(1) { top: 1px; }
+    .toc-toggle-icon span:nth-child(2) { top: 7px; width: 72%; }
+    .toc-toggle-icon span:nth-child(3) { top: 13px; }
+
+    body.toc-collapsed .shell {
+      grid-template-columns: 0 minmax(0, 1fr);
+      gap: 0;
+      width: min(1180px, calc(100% - 40px));
+    }
+
+    body.toc-collapsed .sidebar {
+      opacity: 0;
+      transform: translateX(24px) scale(.98);
+      pointer-events: none;
+      visibility: hidden;
+      overflow: hidden;
+      padding-inline: 0;
+      border-color: transparent;
+      box-shadow: none;
+    }
+
+    body:not(.toc-collapsed) .toc-toggle {
+      color: #fff;
+      background: linear-gradient(135deg, var(--brand), var(--brand-dark));
+      border-color: rgba(255,255,255,.18);
+      box-shadow: 0 16px 36px rgba(22, 119, 210, .28);
+    }
+
+    body:not(.toc-collapsed) .toc-toggle-icon span:nth-child(1) {
+      transform: translateY(6px) rotate(45deg);
+    }
+
+    body:not(.toc-collapsed) .toc-toggle-icon span:nth-child(2) {
+      opacity: 0;
+      transform: translateX(6px);
+    }
+
+    body:not(.toc-collapsed) .toc-toggle-icon span:nth-child(3) {
+      transform: translateY(-6px) rotate(-45deg);
+    }
+
+    main { min-width: 0; }
+
+    .hero {
+      background:
+        radial-gradient(circle at 14% 14%, rgba(47, 123, 255, .18), transparent 34%),
+        radial-gradient(circle at 86% 20%, rgba(18, 216, 255, .12), transparent 30%),
+        linear-gradient(135deg, #ffffff, #f5f9ff 48%, #e9f3ff);
+      color: var(--ink);
+      border-radius: 28px;
+      padding: 44px;
+      box-shadow: var(--shadow);
+      min-height: 410px;
+      display: grid;
+      align-content: space-between;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .hero::after {
+      content: "";
+      position: absolute;
+      inset-inline-start: -80px;
+      bottom: -130px;
+      width: 420px;
+      height: 420px;
+      border-radius: 50%;
+      border: 60px solid rgba(22, 119, 210, .07);
+    }
+
+    .hero > * { position: relative; z-index: 1; }
+    .hero-brand {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      width: fit-content;
+      padding: 0;
+      border-radius: 0;
+      background: transparent;
+      border: 0;
+      box-shadow: none;
+    }
+
+    .hero-brand .mark {
+      width: 48px;
+      height: 48px;
+      border-radius: 0;
+      background: transparent;
+    }
+
+    .hero-brand .mark svg { width: 48px; height: 48px; }
+    .hero-brand .brand-wordmark svg { width: 144px; margin: -24px 0 -25px; }
+    .hero-brand small {
+      display: block;
+      margin-top: -8px;
+      color: var(--muted);
+      font-size: 11px;
+      font-weight: 900;
+      direction: ltr;
+      text-align: left;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      width: fit-content;
+      padding: 7px 12px;
+      border: 1px solid rgba(255,255,255,.22);
+      border-radius: 999px;
+      background: rgba(22, 119, 210, .08);
+      color: var(--brand-dark);
+      font-size: 12px;
+      font-weight: 900;
+    }
+
+    h1, h2, h3 { line-height: 1.35; margin: 0 0 1rem 0; }
+    h1 {
+      max-width: 880px;
+      margin-top: 24px;
+      font-size: clamp(34px, 4vw, 58px);
+      letter-spacing: 0;
+    }
+
+    .hero p {
+      max-width: 940px;
+      margin: 18px 0 0;
+      color: #42546b;
+      font-size: 18px;
+    }
+
+    .meta-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 12px;
+      margin-top: 36px;
+    }
+
+    .meta-card {
+      padding: 16px;
+      border: 1px solid rgba(22,119,210,.14);
+      border-radius: 18px;
+      background: rgba(255,255,255,.68);
+      backdrop-filter: blur(10px);
+    }
+
+    .meta-card b { display: block; font-size: 13px; }
+    .meta-card span { display: block; margin-top: 4px; color: #5a6f87; font-size: 12px; }
+
+    section {
+      margin-top: 22px;
+      background: var(--paper);
+      border: 1px solid var(--line);
+      border-radius: 24px;
+      box-shadow: var(--shadow);
+      padding: 28px;
+      scroll-margin-top: 20px;
+    }
+
+    .section-head {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 18px;
+      padding-bottom: 18px;
+      border-bottom: 1px solid var(--line);
+      margin-bottom: 22px;
+    }
+
+    .section-head h2 { font-size: 30px; color: var(--brand-dark); }
+    .section-head p { margin: 10px 0 0; color: var(--muted); max-width: 860px; }
+
+    .return {
+      white-space: nowrap;
+      padding: 8px 12px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      color: var(--brand-dark);
+      background: var(--soft-blue);
+      font-size: 12px;
+      font-weight: 900;
+    }
+
+    .grid {
+      display: grid;
+      gap: 14px;
+    }
+
+    .cols-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .cols-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    .cols-4 { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+
+    .card {
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      padding: 18px;
+      background: #fff;
+    }
+
+    .card.blue { background: var(--soft-blue); border-color: #c9e2fb; }
+    .card.green { background: var(--soft-green); border-color: #ccebd9; }
+    .card.gold { background: var(--soft-gold); border-color: #f2dfaa; }
+    .card.red { background: var(--soft-red); border-color: #f2c8c5; }
+
+    .card h3 {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      margin-bottom: 8px;
+      font-size: 19px;
+    }
+
+    .card p, .card li { color: var(--muted); }
+    .card p { margin: 0; }
+
+    ul, ol { margin: 10px 0 0; padding-inline-start: 22px; }
+    li { margin: 5px 0; }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      overflow: hidden;
+      border-radius: 16px;
+      border: 1px solid var(--line);
+      background: #fff;
+    }
+
+    th, td {
+      padding: 13px 14px;
+      text-align: start;
+      border-bottom: 1px solid var(--line);
+      vertical-align: top;
+    }
+
+    th {
+      background: #eef5fc;
+      color: var(--brand-dark);
+      font-size: 13px;
+      font-weight: 900;
+    }
+
+    td { color: #33445c; font-size: 14px; }
+    tr:last-child td { border-bottom: 0; }
+
+    .tag {
+      display: inline-flex;
+      align-items: center;
+      width: fit-content;
+      padding: 4px 9px;
+      margin: 2px;
+      border-radius: 999px;
+      background: #edf3fa;
+      color: #31506f;
+      font-size: 12px;
+      font-weight: 900;
+    }
+
+    .tag.must { background: var(--soft-green); color: var(--green); }
+    .tag.admin { background: var(--soft-blue); color: var(--brand-dark); }
+    .tag.warn { background: var(--soft-gold); color: #8a6010; }
+
+    details {
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      background: #fff;
+      overflow: hidden;
+    }
+
+    details + details { margin-top: 12px; }
+    summary {
+      cursor: pointer;
+      padding: 16px 18px;
+      color: var(--brand-dark);
+      font-weight: 900;
+      list-style: none;
+      background: #f8fbff;
+    }
+
+    summary::-webkit-details-marker { display: none; }
+    .details-body { padding: 0 18px 18px; }
+
+    .flow {
+      display: grid;
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      gap: 10px;
+      direction: rtl;
+    }
+
+    .step {
+      position: relative;
+      padding: 16px;
+      border-radius: 18px;
+      border: 1px solid #cfe0f2;
+      background: #f9fcff;
+      min-height: 132px;
+    }
+
+    .step b { display: block; color: var(--brand-dark); margin-bottom: 6px; }
+    .step span {
+      display: inline-grid;
+      place-items: center;
+      width: 26px;
+      height: 26px;
+      margin-bottom: 10px;
+      border-radius: 50%;
+      background: var(--brand);
+      color: #fff;
+      font-size: 12px;
+      font-weight: 900;
+    }
+
+    .kpi-list {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    .kpi {
+      padding: 16px;
+      border-radius: 18px;
+      background: #f7fafc;
+      border: 1px solid var(--line);
+    }
+
+    .kpi b {
+      display: block;
+      color: var(--brand-dark);
+      font-size: 24px;
+      direction: ltr;
+      text-align: start;
+    }
+
+    .kpi span { color: var(--muted); font-size: 13px; }
+
+    .print-note {
+      margin-top: 18px;
+      padding: 14px 16px;
+      border-radius: 16px;
+      background: #f8fbff;
+      border: 1px dashed #bad6f1;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .footer {
+      margin-top: 24px;
+      padding: 24px;
+      border-radius: 22px;
+      background: #f8fbff;
+      border: 1px solid var(--line);
+      color: var(--ink);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 18px;
+    }
+
+    .footer-brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .footer .mark {
+      width: 46px;
+      height: 46px;
+      background: transparent;
+      border: 0;
+    }
+
+    .footer .mark svg { width: 46px; height: 46px; }
+    .footer span { color: var(--muted); }
+
+    @media (max-width: 1080px) {
+      .shell { grid-template-columns: 320px minmax(0, 1fr); width: min(980px, calc(100% - 24px)); }
+      .sidebar { top: 18px; height: calc(100vh - 36px); }
+      .cols-4, .cols-3 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .flow { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .meta-grid, .kpi-list { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    }
+
+    @media (max-width: 680px) {
+      .hero, section { padding: 20px; border-radius: 20px; }
+      .shell { grid-template-columns: minmax(0, 1fr); width: calc(100% - 18px); padding-top: 72px; }
+      .sidebar {
+        position: fixed;
+        inset: 72px 9px 12px 9px;
+        z-index: 70;
+        height: auto;
+        max-height: none;
+      }
+      body.toc-collapsed .shell { grid-template-columns: minmax(0, 1fr); width: calc(100% - 18px); }
+      body.toc-collapsed .sidebar { transform: translateY(-12px) scale(.98); }
+      h1 { font-size: 24px; }
+      .section-head { flex-direction: column; }
+      .cols-4, .cols-3, .cols-2, .flow, .meta-grid, .kpi-list { grid-template-columns: 1fr; }
+      table { display: block; overflow-x: auto; white-space: nowrap; }
+      .footer { flex-direction: column; align-items: flex-start; }
+    }
+
+    @media print {
+      body { background: #fff; }
+      .shell { display: block; width: 100%; padding: 0; }
+      .sidebar, .return, .print-note, .toc-toggle { display: none; }
+      .hero, section { box-shadow: none; page-break-inside: avoid; }
+      section { margin-top: 14px; }
+      a { color: inherit; }
+    }
+  </style>
+</head>
+<body id="top">
+  <svg width="0" height="0" aria-hidden="true" focusable="false" style="position:absolute;overflow:hidden">
+    <defs>
+      <linearGradient id="czhSpark" x1="244" y1="258" x2="782" y2="762" gradientUnits="userSpaceOnUse">
+        <stop offset="0" stop-color="#6D5BFF"/>
+        <stop offset="0.43" stop-color="#2F7BFF"/>
+        <stop offset="0.76" stop-color="#12D8FF"/>
+        <stop offset="1" stop-color="#49F2A8"/>
+      </linearGradient>
+      <radialGradient id="czhGlow" cx="50%" cy="50%" r="58%">
+        <stop offset="0" stop-color="#12D8FF" stop-opacity="0.42"/>
+        <stop offset="0.48" stop-color="#2F7BFF" stop-opacity="0.18"/>
+        <stop offset="1" stop-color="#6D5BFF" stop-opacity="0"/>
+      </radialGradient>
+      <filter id="softShadow" x="-25%" y="-25%" width="150%" height="150%">
+        <feDropShadow dx="0" dy="28" stdDeviation="30" flood-color="#000000" flood-opacity="0.18"/>
+      </filter>
+    </defs>
+    <symbol id="codzhub-icon" viewBox="0 0 1024 1024">
+      <circle cx="512" cy="512" r="338" fill="url(#czhGlow)" opacity="0.28"/>
+      <g fill="none" stroke-linecap="round" stroke-linejoin="round" filter="url(#softShadow)">
+        <path d="M418 326 L248 512 L418 698" stroke="#0B1020" stroke-width="82"/>
+        <path d="M606 326 L776 512 L606 698" stroke="#0B1020" stroke-width="82"/>
+        <path d="M570 316 L490 505 L548 505 L454 708" stroke="url(#czhSpark)" stroke-width="74"/>
+      </g>
+      <g opacity="0.16" fill="none" stroke="url(#czhSpark)" stroke-width="22" stroke-linecap="round">
+        <path d="M328 232 C430 170 592 170 696 232"/>
+        <path d="M696 792 C590 854 432 854 328 792"/>
+      </g>
+      <circle cx="512" cy="512" r="22" fill="#0B1020" opacity="0.94"/>
+      <circle cx="512" cy="512" r="10" fill="url(#czhSpark)"/>
+    </symbol>
+    <symbol id="codzhub-wordmark" viewBox="0 0 434 214">
+      <g transform="translate(22,28)">
+        <g transform="translate(0.000,0.000)">
+          <path d="M355 -25Q202 -25 116.0 55.0Q30 135 30 278Q30 376 64.5 457.5Q99 539 160.5 599.5Q222 660 306.0 693.0Q390 726 489 726Q584 726 640.0 692.0Q696 658 696 599Q696 552 663.0 521.5Q630 491 579 491Q531 491 490.0 517.5Q449 544 425 594Q375 575 334.5 527.0Q294 479 271.0 413.5Q248 348 248 274Q248 183 279.5 132.0Q311 81 367 81Q412 81 448.0 105.5Q484 130 506.5 172.0Q529 214 531 265Q595 265 629.5 241.5Q664 218 664 171Q664 116 622.5 72.0Q581 28 511.0 1.5Q441 -25 355 -25Z" fill="#0B1020" transform="translate(0.000,103.669) scale(0.0770771,-0.0770771)"/>
+          <path d="M319 -25Q235 -25 173.5 7.5Q112 40 78.5 99.0Q45 158 45 238Q45 318 73.0 384.0Q101 450 152.0 498.5Q203 547 272.5 573.5Q342 600 425 600Q442 600 458.5 598.5Q475 597 496 592Q501 576 503.5 554.0Q506 532 505 509Q425 509 366.0 472.0Q307 435 275.0 373.0Q243 311 243 236Q243 151 272.5 114.5Q302 78 351 78Q390 78 420.0 98.5Q450 119 470.0 158.0Q490 197 496 251Q458 272 439.0 304.0Q420 336 420 379Q420 420 437.0 453.0Q454 486 483.5 505.0Q513 524 548 524Q607 524 643.0 477.5Q679 431 679 357Q679 277 651.5 207.5Q624 138 574.5 86.0Q525 34 459.5 4.5Q394 -25 319 -25Z" fill="#0B1020" transform="translate(54.187,103.669) scale(0.0770771,-0.0770771)"/>
+          <path d="M226 -25Q170 -25 127.5 4.0Q85 33 62.0 86.0Q39 139 39 210Q39 291 68.0 358.0Q97 425 150.0 473.5Q203 522 276.0 548.5Q349 575 438 575Q480 575 517 567Q523 551 526.0 529.0Q529 507 529 484Q469 484 416.0 466.0Q363 448 323.0 415.5Q283 383 260.0 340.5Q237 298 237 249Q237 200 257.5 173.5Q278 147 315 147Q341 147 366.5 161.0Q392 175 414.5 201.0Q437 227 453 262L446 119L425 128Q397 56 344.0 15.5Q291 -25 226 -25ZM549 -25Q488 -25 462.0 10.5Q436 46 436 119Q436 138 440.0 172.0Q444 206 450.5 250.0Q457 294 465.5 343.0Q474 392 483.0 442.0Q492 492 500.5 538.5Q509 585 515 622L459 702Q501 733 550.5 754.0Q600 775 646 775Q693 775 712.0 758.5Q731 742 731 704Q731 674 722.0 628.0Q713 582 700.0 524.5Q687 467 673.5 402.0Q660 337 651.0 268.5Q642 200 642 132Q642 82 651.0 61.5Q660 41 673 24Q645 -1 611.5 -13.0Q578 -25 549 -25Z" fill="#0B1020" transform="translate(108.606,103.669) scale(0.0770771,-0.0770771)"/>
+          <path d="M263 90 73 128 329 428 562 453ZM422 -25Q365 -25 316.5 -10.0Q268 5 215 25Q185 2 159.0 -8.0Q133 -18 104 -18Q58 -18 34.0 11.5Q10 41 10 78Q10 108 25.5 136.5Q41 165 72.0 184.0Q103 203 151 203Q175 203 210.0 194.0Q245 185 284.0 173.0Q323 161 359.0 152.0Q395 143 422 143L558 196Q567 173 573.0 148.5Q579 124 579 97Q579 61 557.5 33.5Q536 6 500.5 -9.5Q465 -25 422 -25ZM322 375Q224 376 170.5 391.5Q117 407 96.0 438.0Q75 469 75 514Q75 533 78.0 553.5Q81 574 86 605Q119 591 159.5 578.0Q200 565 241.0 554.5Q282 544 318.0 537.5Q354 531 379 530Q395 560 426.0 580.0Q457 600 494 600Q547 600 573.0 573.5Q599 547 599 506Q599 464 576.0 438.0Q553 412 513.0 398.5Q473 385 424.0 380.0Q375 375 322 375Z" fill="#0B1020" transform="translate(165.490,103.669) scale(0.0770771,-0.0770771)"/>
+          <path d="M623 -26Q559 -26 530.0 6.0Q501 38 501 109Q501 131 503.5 161.0Q506 191 513.0 239.0Q520 287 532.5 361.5Q545 436 564 546L511 653Q567 689 619.0 707.5Q671 726 717 726Q794 726 794 632Q794 617 790.0 587.5Q786 558 779.0 519.0Q772 480 764.0 435.5Q756 391 747.5 346.5Q739 302 732.0 262.0Q725 222 721.0 191.5Q717 161 717 144Q717 98 724.0 70.0Q731 42 747 19Q690 -26 623 -26ZM182 -26Q118 -26 89.0 6.0Q60 38 60 109Q60 131 62.5 161.0Q65 191 72.0 239.0Q79 287 91.5 361.5Q104 436 123 546L70 653Q126 689 178.0 707.5Q230 726 276 726Q353 726 353 632Q353 617 349.0 587.5Q345 558 338.0 519.0Q331 480 323.0 435.5Q315 391 306.5 346.5Q298 302 291.0 262.0Q284 222 280.0 191.5Q276 161 276 144Q276 98 283.0 70.0Q290 42 306 19Q249 -26 182 -26ZM233 267 255 386H601L581 267Z" fill="#2F7BFF" transform="translate(211.816,103.669) scale(0.0770771,-0.0770771)"/>
+          <path d="M218 -25Q138 -25 99.0 15.0Q60 55 60 137Q60 176 66.5 219.5Q73 263 82.0 306.0Q91 349 97.5 388.5Q104 428 104 460Q104 489 98.5 513.5Q93 538 83 551Q124 573 168.5 586.5Q213 600 240 600Q281 600 299.5 583.5Q318 567 318 529Q318 508 312.0 471.5Q306 435 297.0 392.0Q288 349 278.5 305.5Q269 262 263.0 227.0Q257 192 257 172Q257 133 273.0 115.0Q289 97 324 97Q366 97 408.0 128.5Q450 160 475 210L490 51L435 78Q409 47 375.5 23.5Q342 0 302.5 -12.5Q263 -25 218 -25ZM562 -25Q501 -25 472.5 5.0Q444 35 444 99Q444 121 451.5 167.0Q459 213 473.0 282.0Q487 351 508 441L452 525Q498 553 533.0 569.0Q568 585 596.0 592.5Q624 600 649 600Q690 600 707.0 583.0Q724 566 724 526Q724 514 718.5 487.5Q713 461 704.5 425.5Q696 390 687.0 349.5Q678 309 669.5 267.0Q661 225 655.5 186.0Q650 147 650 115Q650 50 681 24Q624 -25 562 -25Z" fill="#2F7BFF" transform="translate(274.327,103.669) scale(0.0770771,-0.0770771)"/>
+          <path d="M263 -25Q190 -25 147.5 -3.5Q105 18 87.5 59.0Q70 100 70 160Q70 180 73.0 210.5Q76 241 84.0 292.0Q92 343 105.0 423.0Q118 503 139 621L83 701Q125 732 174.5 753.0Q224 774 270 774Q317 774 336.0 757.5Q355 741 355 703Q355 665 339.0 599.0Q323 533 305 452L315 447Q344 519 397.0 559.5Q450 600 515 600Q572 600 614.0 571.0Q656 542 679.0 489.0Q702 436 702 365Q702 278 670.5 206.5Q639 135 580.5 83.0Q522 31 441.5 3.0Q361 -25 263 -25ZM245 78Q299 83 346.0 104.5Q393 126 428.5 159.5Q464 193 484.0 235.5Q504 278 504 326Q504 375 483.5 401.5Q463 428 426 428Q389 428 356.5 403.5Q324 379 299.0 333.0Q274 287 259.5 222.5Q245 158 245 78Z" fill="#2F7BFF" transform="translate(332.214,103.669) scale(0.0770771,-0.0770771)"/>
+        </g>
+      </g>
+    </symbol>
+  </svg>
+  <button class="toc-toggle" type="button" aria-controls="prd-sidebar" aria-expanded="true" aria-label="اقفل الفهرس" title="اقفل الفهرس" data-toc-toggle>
+    <span class="toc-toggle-icon" aria-hidden="true"><span></span><span></span><span></span></span>
+  </button>
+  <div class="shell">
+    <aside class="sidebar" id="prd-sidebar">
+      <div class="brand">
+        <div class="mark">
+          <svg role="img" aria-label="CodzHub icon"><use href="#codzhub-icon"></use></svg>
+        </div>
+        <div class="brand-lockup">
+          <div class="brand-wordmark">
+            <svg role="img" aria-label="CodzHub"><use href="#codzhub-wordmark"></use></svg>
+          </div>
+        </div>
+      </div>
+
+      <div class="toc-title">الفهرس التفاعلي</div>
+      <div class="toc-scroll">
+        <ol class="toc">
+          <li><a href="#overview"><span>ملخص المشروع</span><small>01</small></a></li>
+          <li><a href="#objectives"><span>الأهداف ومؤشرات النجاح</span><small>02</small></a></li>
+          <li><a href="#users"><span>المستخدمون والصلاحيات</span><small>03</small></a></li>
+          <li><a href="#sitemap"><span>خريطة الصفحات</span><small>04</small></a></li>
+          <li><a href="#journeys"><span>رحلات المستخدم</span><small>05</small></a></li>
+          <li><a href="#public-pages"><span>صفحات الواجهة العامة</span><small>06</small></a></li>
+          <li><a href="#articles"><span>صفحة المقالات ونظام المحتوى</span><small>07</small></a></li>
+          <li><a href="#community"><span>صفحة الكوميونيتي</span><small>08</small></a></li>
+          <li><a href="#about-team"><span>النبذة وفريق العمل</span><small>09</small></a></li>
+          <li><a href="#admin"><span>لوحة الإدارة</span><small>10</small></a></li>
+          <li><a href="#data"><span>نماذج البيانات</span><small>11</small></a></li>
+          <li><a href="#ux"><span>متطلبات UX/UI</span><small>12</small></a></li>
+          <li><a href="#quality"><span>الجودة والقبول</span><small>13</small></a></li>
+          <li><a href="#roadmap"><span>الأولويات وخطة التسليم</span><small>14</small></a></li>
+        </ol>
+      </div>
+    </aside>
+
+    <main>
+      <header class="hero">
+        <div>
+          <div class="hero-brand">
+            <div class="mark">
+              <svg role="img" aria-label="CodzHub icon"><use href="#codzhub-icon"></use></svg>
+            </div>
+            <div>
+              <div class="brand-wordmark">
+                <svg role="img" aria-label="CodzHub"><use href="#codzhub-wordmark"></use></svg>
+              </div>
+            </div>
+          </div>
+          <br><br>
+          <span class="eyebrow">PRD - وثيقة متطلبات المنتج</span>
+          <h1>منصة عقارات السادات - بوابة عقارية ومجتمعية لمدينة السادات</h1>
+          <p>
+            وثيقة منتج احترافية لتوحيد الرؤية بين مالك المشروع، فريق التصميم، وفريق التطوير.
+            تشمل صفحات العقارات الأساسية، المقالات، الكوميونيتي، النبذة، فريق العمل، وعدّاد سكان المدينة في الصفحة الرئيسية.
+          </p>
+        </div>
+        <div class="meta-grid">
+          <div class="meta-card"><b>Prepared by</b><span>CodzHub</span></div>
+          <div class="meta-card"><b>Project</b><span>Sadat Real Estate Platform</span></div>
+          <div class="meta-card"><b>Audience</b><span>Owner, UX/UI, Frontend, Backend</span></div>
+          <div class="meta-card"><b>Version</b><span>V1.0 - 09/07/2026</span></div>
+        </div>
+      </header>
+
+      <section id="overview">
+        <div class="section-head">
+          <div>
+            <h2>01 - ملخص المشروع</h2>
+            <p>
+              المنصة تهدف إلى تقديم بوابة عقارية رقمية متكاملة لمدينة السادات، تجمع بين البحث عن العقارات،
+              استعراض التفاصيل، إرسال طلبات الاهتمام، محتوى توعوي عبر المقالات، ومساحة مجتمعية خاضعة للمراجعة الإدارية.
+            </p>
+          </div>
+          <a class="return" href="#top">عودة للفهرس</a>
+        </div>
+
+        <div class="grid cols-3">
+          <div class="card blue">
+            <h3>الرؤية</h3>
+            <p>تحويل المنصة إلى نقطة دخول موثوقة لكل ما يخص العقار والحياة داخل مدينة السادات، وليس مجرد كتالوج عقارات.</p>
+          </div>
+          <div class="card green">
+            <h3>القيمة للمالك</h3>
+            <p>زيادة الطلبات المؤهلة، تنظيم المحتوى، إدارة العقارات والمجتمع من لوحة واحدة، وتحويل الزيارات إلى Leads قابلة للمتابعة.</p>
+          </div>
+          <div class="card gold">
+            <h3>القيمة للمستخدم</h3>
+            <p>بحث واضح، معلومات موثوقة، مقالات مختصرة بروابط سريعة، ومجتمع منظم يتيح المشاركة بدون فوضى.</p>
+          </div>
+        </div>
+
+        <div class="print-note">
+          هذه الوثيقة لا تتضمن تسعير أو بنود تعاقدية. هي مرجع منتج وتجربة استخدام قابل للتنفيذ والمراجعة.
+        </div>
+      </section>
+
+      <section id="objectives">
+        <div class="section-head">
+          <div>
+            <h2>02 - الأهداف ومؤشرات النجاح</h2>
+            <p>توضح هذه النقاط ما يجب أن يحققه المنتج بعد الإطلاق، وكيف يمكن قياس نجاحه بشكل عملي.</p>
+          </div>
+          <a class="return" href="#top">عودة للفهرس</a>
+        </div>
+
+        <div class="kpi-list">
+          <div class="kpi"><b>+Leads</b><span>زيادة طلبات التواصل من صفحات العقارات والمطورين والمقالات.</span></div>
+          <div class="kpi"><b>CMS</b><span>تمكين الإدارة من نشر المقالات وإدارة المحتوى بدون تدخل تقني.</span></div>
+          <div class="kpi"><b>Moderation</b><span>منع ظهور محتوى الكوميونيتي للعامة قبل موافقة الإدارة.</span></div>
+          <div class="kpi"><b>SEO</b><span>كل مقال وصفحة مهمة لديها عنوان ووصف ورابط مقروء قابل للأرشفة.</span></div>
+          <div class="kpi"><b>Trust</b><span>صفحات النبذة والفريق تزيد الثقة وتوضح الجهة المسؤولة عن المنصة.</span></div>
+          <div class="kpi"><b>UX</b><span>تجربة سريعة وواضحة على الديسكتوب والموبايل مع حالات فارغة وأخطاء مفهومة.</span></div>
+        </div>
+      </section>
+
+      <section id="users">
+        <div class="section-head">
+          <div>
+            <h2>03 - المستخدمون والصلاحيات</h2>
+            <p>تحديد الأدوار مبكرا يمنع تضارب الصلاحيات بين النشر، المراجعة، وإدارة الطلبات.</p>
+          </div>
+          <a class="return" href="#top">عودة للفهرس</a>
+        </div>
+
+        <table>
+          <thead>
+            <tr>
+              <th>الدور</th>
+              <th>الوصف</th>
+              <th>الصلاحيات الأساسية</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>زائر</strong></td>
+              <td>مستخدم يتصفح المنصة بدون حساب.</td>
+              <td>بحث، قراءة عقارات ومقالات، مشاهدة النبذة والفريق، إرسال Lead، قراءة بوستات معتمدة.</td>
+            </tr>
+            <tr>
+              <td><strong>عضو مجتمع</strong></td>
+              <td>مستخدم مسجل يريد المشاركة في الكوميونيتي.</td>
+              <td>إنشاء بوست، التعليق، لايك/ديسلايك، تعديل بوست قبل الموافقة، متابعة حالة المراجعة.</td>
+            </tr>
+            <tr>
+              <td><strong>بائع / مطور</strong></td>
+              <td>جهة تضيف عقارا أو مشروعا للمنصة.</td>
+              <td>إضافة عقار، رفع صور، تحديث بياناته، انتظار موافقة الإدارة قبل النشر.</td>
+            </tr>
+            <tr>
+              <td><strong>محرر محتوى</strong></td>
+              <td>مسؤول عن المقالات والصفحات التعريفية.</td>
+              <td>إنشاء وتعديل المقالات، quick links، الوسوم، الصور، About Us، Team.</td>
+            </tr>
+            <tr>
+              <td><strong>مشرف مجتمع</strong></td>
+              <td>مسؤول مراجعة بوستات وتعليقات الكوميونيتي.</td>
+              <td>قبول، رفض، إخفاء، تثبيت، حذف، مراجعة البلاغات، تعطيل مستخدم عند الحاجة.</td>
+            </tr>
+            <tr>
+              <td><strong>Admin / Owner</strong></td>
+              <td>مالك أو مدير المنصة.</td>
+              <td>كل الصلاحيات، إعدادات المنصة، عدّاد السكان، الموظفين، التقارير، Leads، التصنيفات.</td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+
+      <section id="sitemap">
+        <div class="section-head">
+          <div>
+            <h2>04 - خريطة الصفحات</h2>
+            <p>الخريطة التالية توضح الصفحات العامة والإدارية المطلوبة في النسخة الحالية من المنتج.</p>
+          </div>
+          <a class="return" href="#top">عودة للفهرس</a>
+        </div>
+
+        <div class="grid cols-2">
+          <div class="card">
+            <h3>الواجهة العامة</h3>
+            <ul>
+              <li>Home - الصفحة الرئيسية مع البحث، العقارات المميزة، وعدّاد سكان المدينة.</li>
+              <li>Search / Results - البحث والفلترة في العقارات.</li>
+              <li>Property Details - تفاصيل العقار، الصور، المواصفات، وLead Form.</li>
+              <li>Developers / Projects - المطورون والمشاريع.</li>
+              <li>Articles - المقالات، التصنيفات، quick links، تفاصيل المقال.</li>
+              <li>Community - بوستات المجتمع المعتمدة، التفاعل، التعليقات.</li>
+              <li>About Us - نبذة المنصة، رسالتها، قيمها، وطريقة العمل.</li>
+              <li>Team - فريق العمل وأدواره وطرق التواصل المعتمدة.</li>
+            </ul>
+          </div>
+          <div class="card">
+            <h3>لوحة الإدارة</h3>
+            <ul>
+              <li>Dashboard Overview - مؤشرات عامة وإحصائيات.</li>
+              <li>Leads Management - إدارة طلبات التواصل.</li>
+              <li>Properties Management - العقارات وحالات النشر.</li>
+              <li>Articles CMS - إنشاء وتعديل ونشر المقالات.</li>
+              <li>Community Moderation - مراجعة البوستات والتعليقات.</li>
+              <li>About & Team CMS - إدارة النبذة وفريق العمل.</li>
+              <li>Platform Settings - عدّاد السكان، بيانات التواصل، SEO، روابط السوشيال.</li>
+              <li>Reports - أداء المحتوى، الطلبات، المجتمع، ومصادر الزيارات.</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <section id="journeys">
+        <div class="section-head">
+          <div>
+            <h2>05 - رحلات المستخدم الأساسية</h2>
+            <p>هذه الفلوهات يجب أن تكون واضحة في الـ UX قبل التصميم التفصيلي والبرمجة.</p>
+          </div>
+          <a class="return" href="#top">عودة للفهرس</a>
+        </div>
+
+        <h3>رحلة العميل العقارية</h3>
+        <div class="flow">
+          <div class="step"><span>1</span><b>Home</b>دخول المستخدم ورؤية البحث والعقارات المميزة وعدّاد السكان.</div>
+          <div class="step"><span>2</span><b>Search</b>فلترة حسب نوع العقار، المنطقة، السعر، المساحة، وحالة الاستلام.</div>
+          <div class="step"><span>3</span><b>Details</b>مشاهدة الصور والمواصفات والتقسيط والموقع والخدمات القريبة.</div>
+          <div class="step"><span>4</span><b>Lead Form</b>إرسال الاسم ورقم الهاتف ووقت التواصل مع حفظ كود العقار.</div>
+          <div class="step"><span>5</span><b>Admin Follow-up</b>ظهور الطلب في لوحة الإدارة ومتابعته حتى الإغلاق.</div>
+        </div>
+
+        <h3 style="margin-top:24px">رحلة المقالات</h3>
+        <div class="flow">
+          <div class="step"><span>1</span><b>Create</b>المحرر ينشئ مقالا من لوحة الإدارة.</div>
+          <div class="step"><span>2</span><b>Quick Links</b>إضافة روابط سريعة داخل المقال مثل مناطق، خدمات، أو عقارات ذات صلة.</div>
+          <div class="step"><span>3</span><b>Review</b>حفظ كمسودة أو إرسال للمراجعة حسب الصلاحيات.</div>
+          <div class="step"><span>4</span><b>Publish</b>نشر المقال ليظهر في صفحة المقالات وتفاصيل المقال.</div>
+          <div class="step"><span>5</span><b>Measure</b>قياس المشاهدات والضغط على الروابط والـ Leads الناتجة.</div>
+        </div>
+
+        <h3 style="margin-top:24px">رحلة الكوميونيتي</h3>
+        <div class="flow">
+          <div class="step"><span>1</span><b>Post</b>عضو المجتمع يكتب بوست ويرفع صورة اختيارية.</div>
+          <div class="step"><span>2</span><b>Pending</b>البوست يدخل حالة انتظار المراجعة ولا يظهر للعامة.</div>
+          <div class="step"><span>3</span><b>Moderate</b>المشرف يقبل أو يرفض مع سبب واضح عند الرفض.</div>
+          <div class="step"><span>4</span><b>Publish</b>البوست المعتمد يظهر في صفحة الكوميونيتي.</div>
+          <div class="step"><span>5</span><b>Engage</b>المستخدمون يتفاعلون بلايك، ديسلايك، وتعليقات خاضعة للسياسات.</div>
+        </div>
+      </section>
+
+      <section id="public-pages">
+        <div class="section-head">
+          <div>
+            <h2>06 - صفحات الواجهة العامة</h2>
+            <p>تفصيل الصفحات الأساسية قبل إضافة المقالات والكوميونيتي.</p>
+          </div>
+          <a class="return" href="#top">عودة للفهرس</a>
+        </div>
+
+        <details open>
+          <summary>Home - الصفحة الرئيسية</summary>
+          <div class="details-body">
+            <table>
+              <tbody>
+                <tr><th>الهدف</th><td>تقديم المنصة بسرعة، إظهار البحث، العقارات المميزة، المقالات الحديثة، الكوميونيتي، وعدّاد سكان مدينة السادات.</td></tr>
+                <tr><th>المكونات</th><td>Hero، بحث سريع، تبويبات بيع/إيجار، كروت عقارات، أقسام رئيسية، مقالات حديثة، بوستات مجتمع مختارة، About مختصر، Team مختصر، CTA واتساب/Lead.</td></tr>
+                <tr><th>عدّاد السكان</th><td>رقم ظاهر كـ animated counter في الهوم. يتم التحكم فيه من إعدادات الإدارة. يجب عرض مصدر أو نص مساعد مثل "عدد تقريبي قابل للتحديث من الإدارة".</td></tr>
+                <tr><th>قبول</th><td>الصفحة تشتغل بدون تسجيل، البحث واضح على الموبايل، وعدّاد السكان لا يكسر التصميم إذا كان الرقم كبيرا.</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </details>
+
+        <details>
+          <summary>Search / Results - البحث والنتائج</summary>
+          <div class="details-body">
+            <ul>
+              <li>فلاتر: نوع العملية، نوع العقار، المنطقة، السعر، المساحة، الغرف، الحمامات، حالة الاستلام، التقسيط، المطور.</li>
+              <li>ترتيب النتائج: الأحدث، السعر الأقل، السعر الأعلى، الأكثر مشاهدة، العقارات المميزة.</li>
+              <li>كروت النتائج تعرض الصورة، السعر، كود العقار، المنطقة، أبرز المواصفات، وزر التفاصيل.</li>
+              <li>حالة عدم وجود نتائج تعرض اقتراحات تعديل الفلتر وزر الرجوع لكل العقارات.</li>
+            </ul>
+          </div>
+        </details>
+
+        <details>
+          <summary>Property Details - تفاصيل العقار</summary>
+          <div class="details-body">
+            <ul>
+              <li>معرض صور، سعر، مواصفات، وصف، مرافق، خريطة أو موقع تقريبي، حالة الاستلام، وخطة دفع عند وجودها.</li>
+              <li>Lead Form يرسل بيانات العميل ويربط الطلب بكود العقار ومصدر الزيارة.</li>
+              <li>CTA واضح للتواصل عبر واتساب أو طلب معاينة.</li>
+              <li>مقترحات عقارات مشابهة في نهاية الصفحة.</li>
+            </ul>
+          </div>
+        </details>
+
+        <details>
+          <summary>Developers / Projects - المطورون والمشاريع</summary>
+          <div class="details-body">
+            <ul>
+              <li>صفحة قائمة المطورين مع لوجو، وصف، عدد المشاريع، ومناطق النشاط.</li>
+              <li>صفحة تفاصيل المطور تعرض المشاريع، الوحدات، خطط الدفع، وLead خاص بالمطور.</li>
+              <li>الإدارة تتحكم في ظهور المطور وترتيبه وحالة اعتماده.</li>
+            </ul>
+          </div>
+        </details>
+      </section>
+
+      <section id="articles">
+        <div class="section-head">
+          <div>
+            <h2>07 - صفحة المقالات ونظام المحتوى</h2>
+            <p>المقالات ليست مجرد نصوص، لكنها أداة تثقيف وSEO وتحويل المستخدمين إلى طلبات عقارية مؤهلة.</p>
+          </div>
+          <a class="return" href="#top">عودة للفهرس</a>
+        </div>
+
+        <div class="grid cols-2">
+          <div class="card blue">
+            <h3>صفحة قائمة المقالات</h3>
+            <ul>
+              <li>عرض المقالات في كروت تحتوي على صورة، عنوان، تصنيف، ملخص، تاريخ النشر، ووقت القراءة.</li>
+              <li>بحث داخل المقالات.</li>
+              <li>فلترة حسب التصنيف: سكن، استثمار، مناطق، خدمات، قوانين، نصائح شراء، نصائح إيجار.</li>
+              <li>قسم مقالات مميزة ومقالات حديثة.</li>
+              <li>CTA ذكي داخل الصفحة: "هل تبحث عن عقار مناسب؟".</li>
+            </ul>
+          </div>
+          <div class="card green">
+            <h3>صفحة تفاصيل المقال</h3>
+            <ul>
+              <li>عنوان واضح، صورة غلاف، كاتب، تاريخ، تصنيف، ووقت قراءة.</li>
+              <li>جدول محتويات داخلي للانتقال بين عناوين المقال.</li>
+              <li>Quick Links: روابط سريعة لعقارات، مناطق، مطورين، خدمات، أو مقالات مرتبطة.</li>
+              <li>كروت "اقرأ أيضا" و"عقارات مرتبطة".</li>
+              <li>نهاية المقال تحتوي على CTA لإرسال طلب اهتمام أو سؤال.</li>
+            </ul>
+          </div>
+        </div>
+
+        <h3 style="margin-top:22px">متطلبات لوحة الإدارة للمقالات</h3>
+        <table>
+          <thead>
+            <tr>
+              <th>العنصر</th>
+              <th>المطلوب</th>
+              <th>ملاحظات UX</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Article Editor</td>
+              <td>محرر محتوى يدعم عناوين، فقرات، قوائم، صور، روابط، اقتباس، وجداول بسيطة.</td>
+              <td>واجهة تحرير نظيفة مع معاينة قبل النشر.</td>
+            </tr>
+            <tr>
+              <td>Quick Links</td>
+              <td>إضافة روابط داخلية أو خارجية، مع عنوان قصير ووصف اختياري وأيقونة/نوع الرابط.</td>
+              <td>تظهر في صندوق جانبي أو داخل المقال حسب التصميم.</td>
+            </tr>
+            <tr>
+              <td>SEO Fields</td>
+              <td>Slug، meta title، meta description، featured image، canonical عند الحاجة.</td>
+              <td>تنبيهات إذا زاد العنوان أو الوصف عن الطول المناسب.</td>
+            </tr>
+            <tr>
+              <td>Publishing Status</td>
+              <td>Draft، Pending Review، Published، Archived.</td>
+              <td>حالة واضحة بلون مختلف وسجل آخر تعديل.</td>
+            </tr>
+            <tr>
+              <td>Related Content</td>
+              <td>ربط المقال بعقارات، مطورين، مناطق، أو مقالات أخرى.</td>
+              <td>اختيار بالبحث وليس كتابة يدوية فقط.</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <h3 style="margin-top:22px">حالات قبول المقالات</h3>
+        <div class="grid cols-3">
+          <div class="card"><span class="tag must">Must</span><p>لا يظهر أي مقال للعامة إلا إذا كانت حالته Published.</p></div>
+          <div class="card"><span class="tag must">Must</span><p>الرابط المقروء slug يكون فريدا ولا يتكرر.</p></div>
+          <div class="card"><span class="tag must">Must</span><p>quick links قابلة للترتيب والحذف والتعديل من الإدارة.</p></div>
+          <div class="card"><span class="tag warn">Should</span><p>إمكانية جدولة النشر لاحقا إذا احتاجها المالك.</p></div>
+          <div class="card"><span class="tag warn">Should</span><p>إظهار إحصائيات المشاهدات والضغط على الروابط.</p></div>
+          <div class="card"><span class="tag warn">Should</span><p>اقتراح مقالات مرتبطة تلقائيا حسب التصنيف أو الوسوم.</p></div>
+        </div>
+      </section>
+
+      <section id="community">
+        <div class="section-head">
+          <div>
+            <h2>08 - صفحة الكوميونيتي</h2>
+            <p>الكوميونيتي مساحة مشاركة منظمة، لكن النشر العام لا يتم إلا بعد موافقة الإدارة للحفاظ على جودة المنصة وسمعتها.</p>
+          </div>
+          <a class="return" href="#top">عودة للفهرس</a>
+        </div>
+
+        <div class="grid cols-2">
+          <div class="card gold">
+            <h3>للمستخدم</h3>
+            <ul>
+              <li>إنشاء بوست نصي مع صورة اختيارية.</li>
+              <li>اختيار تصنيف للبوست مثل: سؤال، تجربة، نصيحة، خدمة، منطقة، عقار.</li>
+              <li>مشاهدة حالة البوست: قيد المراجعة، منشور، مرفوض.</li>
+              <li>لايك وديسلايك على البوستات المنشورة.</li>
+              <li>تعليقات على البوستات مع قواعد واضحة.</li>
+            </ul>
+          </div>
+          <div class="card red">
+            <h3>للإدارة</h3>
+            <ul>
+              <li>قائمة بوستات Pending مع معاينة كاملة.</li>
+              <li>قبول، رفض مع سبب، تعديل بسيط قبل النشر، أو حذف.</li>
+              <li>مراجعة التعليقات والبلاغات.</li>
+              <li>تثبيت بوست مهم أو إخفاء بوست منشور.</li>
+              <li>تعطيل مستخدم مخالف أو وضعه تحت مراجعة مشددة.</li>
+            </ul>
+          </div>
+        </div>
+
+        <h3 style="margin-top:22px">قواعد النشر والتفاعل</h3>
+        <table>
+          <thead>
+            <tr>
+              <th>الخاصية</th>
+              <th>القاعدة</th>
+              <th>حالة القبول</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>نشر البوست</td>
+              <td>أي بوست جديد يدخل Pending Review ولا يظهر للعامة قبل الموافقة.</td>
+              <td><span class="tag must">Must</span></td>
+            </tr>
+            <tr>
+              <td>لايك / ديسلايك</td>
+              <td>كل مستخدم مسجل له تفاعل واحد فقط لكل بوست ويمكنه تغييره.</td>
+              <td><span class="tag must">Must</span></td>
+            </tr>
+            <tr>
+              <td>التعليقات</td>
+              <td>تظهر حسب سياسة الإدارة: إما مباشرة مع إمكانية البلاغ، أو Pending إذا اختارت الإدارة ذلك.</td>
+              <td><span class="tag warn">Configurable</span></td>
+            </tr>
+            <tr>
+              <td>البلاغات</td>
+              <td>أي مستخدم يمكنه الإبلاغ عن بوست أو تعليق مع سبب.</td>
+              <td><span class="tag warn">Should</span></td>
+            </tr>
+            <tr>
+              <td>الإشعارات</td>
+              <td>إبلاغ صاحب البوست عند القبول أو الرفض مع سبب مختصر.</td>
+              <td><span class="tag warn">Should</span></td>
+            </tr>
+          </tbody>
+        </table>
+
+        <h3 style="margin-top:22px">حالات واجهة الكوميونيتي</h3>
+        <div class="grid cols-4">
+          <div class="card"><h3>Empty</h3><p>لا توجد بوستات بعد، مع CTA لإنشاء أول بوست.</p></div>
+          <div class="card"><h3>Pending</h3><p>رسالة واضحة: "بوستك قيد المراجعة ولن يظهر إلا بعد الموافقة".</p></div>
+          <div class="card"><h3>Rejected</h3><p>إظهار سبب الرفض لصاحب البوست فقط مع إمكانية التعديل وإعادة الإرسال.</p></div>
+          <div class="card"><h3>Reported</h3><p>إخفاء أو تمييز المحتوى عند كثرة البلاغات حسب إعدادات الإدارة.</p></div>
+        </div>
+      </section>
+
+      <section id="about-team">
+        <div class="section-head">
+          <div>
+            <h2>09 - النبذة وفريق العمل</h2>
+            <p>صفحات الثقة مهمة جدا في منصة عقارية لأنها توضح من يدير المنصة وكيف يتم التعامل مع طلبات العملاء.</p>
+          </div>
+          <a class="return" href="#top">عودة للفهرس</a>
+        </div>
+
+        <div class="grid cols-2">
+          <div class="card blue">
+            <h3>About Us - النبذة</h3>
+            <ul>
+              <li>تعريف مختصر بالمنصة ورسالتها داخل مدينة السادات.</li>
+              <li>شرح طريقة العمل: البحث، التواصل، التحقق، المعاينة، والمتابعة.</li>
+              <li>قيم المنصة: وضوح، ثقة، تنظيم، سرعة متابعة.</li>
+              <li>إحصائيات اختيارية: عدد العقارات، عدد المناطق، عدد الطلبات، عدد سكان المدينة.</li>
+              <li>CTA للتواصل أو تصفح العقارات.</li>
+            </ul>
+          </div>
+          <div class="card green">
+            <h3>Team - فريق العمل</h3>
+            <ul>
+              <li>كروت أعضاء الفريق: الاسم، الصورة، الدور، نبذة قصيرة، التخصص.</li>
+              <li>إمكانية ترتيب أعضاء الفريق من لوحة الإدارة.</li>
+              <li>إخفاء أو إظهار عضو بدون حذف بياناته.</li>
+              <li>روابط تواصل اختيارية ومعتمدة من الإدارة فقط.</li>
+              <li>تقسيم الفريق حسب الأقسام: إدارة، مبيعات، دعم، محتوى.</li>
+            </ul>
+          </div>
+        </div>
+
+        <h3 style="margin-top:22px">إدارة المحتوى من لوحة الإدارة</h3>
+        <table>
+          <tbody>
+            <tr><th>About CMS</th><td>حقول للعنوان، الوصف، الرسالة، القيم، صور/بانر، أرقام إحصائية، وروابط CTA.</td></tr>
+            <tr><th>Team CMS</th><td>إضافة، تعديل، ترتيب، إخفاء، وحذف أعضاء الفريق مع رفع صور مضغوطة.</td></tr>
+            <tr><th>قبول</th><td>أي تعديل يظهر للعامة بعد الحفظ مباشرة أو بعد مراجعة حسب صلاحية المستخدم الإداري.</td></tr>
+          </tbody>
+        </table>
+      </section>
+
+      <section id="admin">
+        <div class="section-head">
+          <div>
+            <h2>10 - لوحة الإدارة</h2>
+            <p>لوحة الإدارة هي مركز التحكم في العقارات، الطلبات، المقالات، الكوميونيتي، الصفحات التعريفية، والإعدادات العامة.</p>
+          </div>
+          <a class="return" href="#top">عودة للفهرس</a>
+        </div>
+
+        <table>
+          <thead>
+            <tr>
+              <th>الموديول</th>
+              <th>المهام المطلوبة</th>
+              <th>الصلاحيات</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Dashboard Overview</td>
+              <td>إجمالي العقارات، الطلبات، المقالات، البوستات المعلقة، مشاهدات المقالات، أحدث النشاط.</td>
+              <td>Admin, Owner</td>
+            </tr>
+            <tr>
+              <td>Leads</td>
+              <td>عرض الطلبات، تغيير الحالة، تعيين مسؤول، إضافة ملاحظات، فلترة وتصدير.</td>
+              <td>Admin, Sales</td>
+            </tr>
+            <tr>
+              <td>Properties</td>
+              <td>إضافة وتعديل واعتماد العقارات، إدارة الصور، التصنيفات، الحالة، والمطور.</td>
+              <td>Admin, Property Manager</td>
+            </tr>
+            <tr>
+              <td>Articles CMS</td>
+              <td>إنشاء المقالات، quick links، التصنيفات، الوسوم، SEO، النشر والأرشفة.</td>
+              <td>Admin, Content Editor</td>
+            </tr>
+            <tr>
+              <td>Community Moderation</td>
+              <td>مراجعة البوستات، التعليقات، البلاغات، الحظر، التثبيت، وسجل القرارات.</td>
+              <td>Admin, Moderator</td>
+            </tr>
+            <tr>
+              <td>About & Team</td>
+              <td>تعديل النبذة، القيم، الإحصائيات، وأعضاء الفريق.</td>
+              <td>Admin, Content Editor</td>
+            </tr>
+            <tr>
+              <td>Settings</td>
+              <td>عداد سكان المدينة، بيانات التواصل، روابط السوشيال، إعدادات التعليقات، إعدادات SEO.</td>
+              <td>Owner, Admin</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <h3 style="margin-top:22px">إعداد عدّاد سكان المدينة</h3>
+        <div class="grid cols-3">
+          <div class="card"><span class="tag admin">Admin Setting</span><p>حقل رقمي: populationCounterValue.</p></div>
+          <div class="card"><span class="tag admin">Display Text</span><p>نص مساعد قابل للتعديل مثل "عدد سكان المدينة".</p></div>
+          <div class="card"><span class="tag admin">Visibility</span><p>إظهار أو إخفاء العدّاد من الصفحة الرئيسية.</p></div>
+        </div>
+      </section>
+
+      <section id="data">
+        <div class="section-head">
+          <div>
+            <h2>11 - نماذج البيانات المقترحة</h2>
+            <p>ليست مخطط قاعدة بيانات نهائي، لكنها تحدد الكيانات المطلوبة للفريق التقني قبل التنفيذ.</p>
+          </div>
+          <a class="return" href="#top">عودة للفهرس</a>
+        </div>
+
+        <table>
+          <thead>
+            <tr>
+              <th>Entity</th>
+              <th>حقول أساسية</th>
+              <th>حالات / علاقات</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Article</td>
+              <td>title, slug, summary, content, coverImage, categoryId, tags, quickLinks, seo, authorId, status</td>
+              <td>Draft, Pending, Published, Archived</td>
+            </tr>
+            <tr>
+              <td>QuickLink</td>
+              <td>label, url, type, description, order, isExternal</td>
+              <td>مرتبط بمقال أو صفحة محتوى.</td>
+            </tr>
+            <tr>
+              <td>CommunityPost</td>
+              <td>authorId, title, body, images, category, status, likesCount, dislikesCount, commentsCount</td>
+              <td>Pending, Approved, Rejected, Hidden</td>
+            </tr>
+            <tr>
+              <td>Comment</td>
+              <td>postId, authorId, body, status, parentCommentId</td>
+              <td>Visible, Pending, Hidden, Deleted</td>
+            </tr>
+            <tr>
+              <td>Reaction</td>
+              <td>userId, targetType, targetId, reactionType</td>
+              <td>Like أو Dislike، تفاعل واحد لكل مستخدم لكل هدف.</td>
+            </tr>
+            <tr>
+              <td>TeamMember</td>
+              <td>name, role, photo, bio, department, socials, order, isVisible</td>
+              <td>يظهر في صفحة الفريق حسب الترتيب.</td>
+            </tr>
+            <tr>
+              <td>PlatformSettings</td>
+              <td>populationCounterValue, contacts, socialLinks, seoDefaults, moderationRules</td>
+              <td>إعدادات عامة يديرها Admin.</td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+
+      <section id="ux">
+        <div class="section-head">
+          <div>
+            <h2>12 - متطلبات UX/UI</h2>
+            <p>هذه النقاط موجهة لفريق التصميم لضمان تجربة واضحة ومناسبة للمستخدم المصري ولطبيعة السوق العقاري.</p>
+          </div>
+          <a class="return" href="#top">عودة للفهرس</a>
+        </div>
+
+        <div class="grid cols-2">
+          <div class="card">
+            <h3>مبادئ التصميم</h3>
+            <ul>
+              <li>Arabic RTL أولا، مع دعم إنجليزي لاحقا عند الحاجة.</li>
+              <li>تصميم موثوق، واضح، غير مزدحم، مناسب للعقارات والمحتوى.</li>
+              <li>الأرقام والأسعار تظهر بشكل مقروء مع EGP عند الحاجة.</li>
+              <li>الأزرار الأساسية ثابتة وواضحة: استفسر، تفاصيل، أرسل طلب، انشر بوست.</li>
+              <li>الفلاتر والكروت يجب أن تكون سهلة على الموبايل.</li>
+            </ul>
+          </div>
+          <div class="card">
+            <h3>حالات يجب تصميمها</h3>
+            <ul>
+              <li>Loading states لكل قوائم العقارات، المقالات، والبوستات.</li>
+              <li>Empty states لعدم وجود نتائج أو مقالات أو بوستات.</li>
+              <li>Error states عند فشل الإرسال أو فقد الاتصال.</li>
+              <li>Pending states للبوستات والمقالات قيد المراجعة.</li>
+              <li>Success states بعد إرسال Lead أو بوست أو تعليق.</li>
+            </ul>
+          </div>
+        </div>
+
+        <h3 style="margin-top:22px">ملاحظات مهمة للـ UX</h3>
+        <ul>
+          <li>صفحة المقال يجب ألا تكون حائط نص طويل فقط. يجب وجود quick links وجدول محتويات وكروت مرتبطة.</li>
+          <li>صفحة الكوميونيتي تحتاج رسالة واضحة قبل النشر توضح أن البوست سيظهر بعد موافقة الإدارة.</li>
+          <li>عداد السكان في الهوم عنصر ثقة ومدينة، لكنه لا يجب أن يزاحم البحث الرئيسي أو CTA العقارات.</li>
+          <li>النبذة وفريق العمل يجب أن يكونا مختصرين ومقنعين، مع روابط رجوع للتواصل والعقارات.</li>
+          <li>لوحة الإدارة يجب أن تستخدم جداول قابلة للفلترة، حالات ملونة، ومعاينة سريعة قبل الموافقة.</li>
+        </ul>
+      </section>
+
+      <section id="quality">
+        <div class="section-head">
+          <div>
+            <h2>13 - الجودة ومعايير القبول</h2>
+            <p>معايير القبول تربط بين التصميم والتنفيذ وتمنع التسليم الناقص.</p>
+          </div>
+          <a class="return" href="#top">عودة للفهرس</a>
+        </div>
+
+        <div class="grid cols-3">
+          <div class="card green">
+            <h3>Functional</h3>
+            <ul>
+              <li>كل فورم له validation واضح.</li>
+              <li>كل حالة نشر لها status واضح في الواجهة والإدارة.</li>
+              <li>لا يظهر محتوى Pending للعامة.</li>
+            </ul>
+          </div>
+          <div class="card blue">
+            <h3>Content</h3>
+            <ul>
+              <li>المقالات لديها SEO fields.</li>
+              <li>quick links تعمل ولا تحتوي روابط مكسورة.</li>
+              <li>About وTeam قابلان للإدارة.</li>
+            </ul>
+          </div>
+          <div class="card gold">
+            <h3>UX</h3>
+            <ul>
+              <li>التصميم Responsive.</li>
+              <li>حالات loading/empty/error موجودة.</li>
+              <li>الفهرس والتنقل واضحان في الصفحات الطويلة.</li>
+            </ul>
+          </div>
+        </div>
+
+        <h3 style="margin-top:22px">اختبارات قبول أساسية</h3>
+        <table>
+          <thead>
+            <tr>
+              <th>السيناريو</th>
+              <th>النتيجة المتوقعة</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Admin ينشر مقالا مع quick links.</td>
+              <td>المقال يظهر في قائمة المقالات وتفاصيله، والروابط السريعة تظهر بالترتيب المحدد.</td>
+            </tr>
+            <tr>
+              <td>مستخدم ينشر بوست جديد في الكوميونيتي.</td>
+              <td>البوست لا يظهر للعامة ويدخل لوحة الإدارة بحالة Pending Review.</td>
+            </tr>
+            <tr>
+              <td>Admin يوافق على بوست.</td>
+              <td>البوست يظهر في صفحة الكوميونيتي ويمكن التفاعل معه.</td>
+            </tr>
+            <tr>
+              <td>مستخدم يعمل لايك ثم ديسلايك لنفس البوست.</td>
+              <td>يتم تحديث التفاعل ولا يتم احتساب تفاعلين لنفس المستخدم.</td>
+            </tr>
+            <tr>
+              <td>Admin يعدل عدّاد السكان.</td>
+              <td>القيمة الجديدة تظهر في الصفحة الرئيسية بدون تعديل كود.</td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+
+      <section id="roadmap">
+        <div class="section-head">
+          <div>
+            <h2>14 - الأولويات وخطة التسليم</h2>
+            <p>تقسيم التنفيذ إلى مراحل يجعل النسخة الأولى قابلة للإطلاق بدون انتظار كل التحسينات المستقبلية.</p>
+          </div>
+          <a class="return" href="#top">عودة للفهرس</a>
+        </div>
+
+        <table>
+          <thead>
+            <tr>
+              <th>المرحلة</th>
+              <th>النطاق</th>
+              <th>الأولوية</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>MVP</td>
+              <td>Home، Search، Property Details، Lead Form، Admin Leads، Articles CMS، Articles Page، About، Team، Population Counter.</td>
+              <td><span class="tag must">High</span></td>
+            </tr>
+            <tr>
+              <td>Community V1</td>
+              <td>إنشاء بوست، Pending Approval، مراجعة الإدارة، عرض البوستات، لايك/ديسلايك، تعليقات أساسية.</td>
+              <td><span class="tag must">High</span></td>
+            </tr>
+            <tr>
+              <td>Admin Expansion</td>
+              <td>تقارير محتوى، بلاغات، تصدير، صلاحيات تفصيلية، سجل قرارات المراجعة.</td>
+              <td><span class="tag warn">Medium</span></td>
+            </tr>
+            <tr>
+              <td>Enhancements</td>
+              <td>جدولة المقالات، إشعارات المستخدمين، مقالات مرتبطة تلقائيا، تثبيت بوستات، بحث متقدم في المجتمع.</td>
+              <td><span class="tag warn">Next</span></td>
+            </tr>
+          </tbody>
+        </table>
+
+        <h3 style="margin-top:22px">أسئلة مفتوحة قبل التنفيذ</h3>
+        <ul>
+          <li>هل إنشاء بوستات الكوميونيتي يتطلب تسجيل دخول برقم الهاتف، أم حساب عادي بالبريد/كلمة المرور؟</li>
+          <li>هل التعليقات تظهر مباشرة بعد نشر البوست، أم تحتاج موافقة أيضا؟</li>
+          <li>هل عدّاد سكان المدينة رقم إداري ثابت، أم سيتم ربطه بمصدر خارجي لاحقا؟</li>
+          <li>هل المقالات تحتاج أكثر من كاتب وصلاحية مراجعة قبل النشر، أم Admin واحد ينشر مباشرة؟</li>
+        </ul>
+      </section>
+
+      <div class="footer">
+        <div class="footer-brand">
+          <div class="mark">
+            <svg role="img" aria-label="CodzHub icon"><use href="#codzhub-icon"></use></svg>
+          </div>
+          <div>
+            <strong>CodzHub - Product & Software Documentation</strong><br>
+            <span>Sadat Real Estate Platform PRD - prepared for owner review, UX planning, and technical handoff.</span>
+          </div>
+        </div>
+        <a class="return" href="#top">عودة للفهرس</a>
+      </div>
+    </main>
+  </div>
+  <script>
+    const tocButton = document.querySelector('[data-toc-toggle]');
+    const tocScroll = document.querySelector('.toc-scroll');
+    const storageKey = 'codzhub-prd-toc-collapsed';
+    const getSavedTocState = () => {
+      try { return localStorage.getItem(storageKey) === '1'; }
+      catch (error) { return false; }
+    };
+    const saveTocState = (collapsed) => {
+      try { localStorage.setItem(storageKey, collapsed ? '1' : '0'); }
+      catch (error) {}
+    };
+    const setTocState = (collapsed) => {
+      document.body.classList.toggle('toc-collapsed', collapsed);
+      tocButton?.setAttribute('aria-expanded', String(!collapsed));
+      tocButton?.setAttribute('aria-label', collapsed ? 'إظهار الفهرس' : 'إخفاء الفهرس');
+      tocButton?.setAttribute('title', collapsed ? 'إظهار الفهرس' : 'إخفاء الفهرس');
+      saveTocState(collapsed);
+    };
+    setTocState(getSavedTocState());
+    tocButton?.addEventListener('click', () => {
+      setTocState(!document.body.classList.contains('toc-collapsed'));
+    });
+    document.querySelectorAll('.return').forEach((link) => {
+      link.addEventListener('click', () => {
+        setTocState(false);
+        if (tocScroll) tocScroll.scrollTop = 0;
+      });
+    });
+  </script>
+</body>
+</html>
