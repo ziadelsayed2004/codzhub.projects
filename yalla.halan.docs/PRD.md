@@ -1,6 +1,6 @@
 <a id="top"></a>
 
-# Market Home - Product Requirements Document
+# Yalla Halan - Product Requirements Document
 
 | Field | Value |
 |---|---|
@@ -10,14 +10,14 @@
 | Delivery Package | Customer App, Merchant App, Driver App, Admin Dashboard, Merchant Dashboard |
 | Testing Surfaces | Customer Web, Driver Web |
 
-Market Home is a local marketplace and delivery platform. Customers can order from one merchant or several merchants in the same checkout. Each merchant prepares only its own items. Approved drivers collect ready portions and deliver the order to the customer. Admins control the marketplace rules, approvals, pricing, commissions, invoices, promotions, cashback points, reports, and support.
+Yalla Halan is a local marketplace and delivery platform. Customers can order from one merchant or several merchants in the same checkout, up to the admin-configured limit. Each merchant prepares only its own portion. Approved drivers collect the active portions and deliver the order to the customer. Admins control marketplace rules, approvals, pricing, commissions, invoices, promotions, cashback points, reports, safety, and support.
 
 This PRD is split into two clear parts:
 
 - **Part 1 - Product PRD:** product behavior in simple language for the client, UI/UX, and app teams.
 - **Part 2 - Operational / Integration PRD:** deeper rules for backend, dashboards, QA, and integration teams without turning the PRD into code documentation.
 
-Future and retired concepts are listed only at the end so the active product scope stays clean.
+The structure below is the original two-part PRD structure. Final decisions are merged into their proper sections; there are no phase updates, amendments, or repeated feature versions. A requirement in this PRD describes the final product target and does not, by itself, prove that its runtime or frontend already exists.
 
 ## Table of Contents
 
@@ -54,9 +54,9 @@ Future and retired concepts are listed only at the end so the active product sco
   - [26. Flash Sale Billing Rules](#26-flash-sale-billing-rules)
   - [27. Cashback Points Rules](#27-cashback-points-rules)
   - [28. Merchant Category Rules](#28-merchant-category-rules)
-  - [29. Weekly Order Reminder Rules](#29-weekly-order-reminder-rules)
+  - [29. Weekly Order Builder, Materialization, and Reminder Rules](#29-weekly-order-reminder-rules)
   - [30. Referral and Chat Alert Rules](#30-referrals-and-chat-alert-rules)
-  - [31. API and QA Handoff Summary](#30-api-and-qa-handoff-summary)
+  - [31. API and QA Handoff Summary](#31-api-and-qa-handoff-summary)
 - [Out of Current Scope](#out-of-current-scope)
 - [Retired / Not Active](#retired--not-active)
 
@@ -74,11 +74,11 @@ This part explains the product as the client and design teams should understand 
 
 ## 1. Product Summary
 
-Market Home connects customers, merchants, drivers, and admins in one order-delivery marketplace.
+Yalla Halan connects customers, merchants, drivers, and admins in one order-delivery marketplace.
 
-A customer can place one checkout that includes products from multiple merchants. The order is then split into merchant portions. Each merchant sees only its own portion, accepts or rejects it, and confirms preparation timing. The system computes readiness automatically; merchant ready/handoff buttons are no longer required in the active workflow. A driver sees the order only when it is ready enough for pickup and only if the driver is eligible by zone, account status, online state, and vehicle type.
+A customer can place one checkout that includes products from multiple merchants. The order is then split into merchant portions. Each merchant sees only its own portion, accepts or rejects it, and confirms preparation timing. The system computes readiness automatically. A driver sees the order only inside the configured pre-readiness window and only if the driver is eligible by zone, account status, online state, and vehicle type.
 
-The platform also supports discounts, cashback points, birthday loyalty, customer-to-customer referral rewards, weekly order reminders, merchant weekly invoices, compulsory driver daily settlement, flash sales, manual/payment proof, chat, explicit chat alert buttons, notifications, ratings/reputation, admin monitoring, Google Maps Platform location pin selection for customer and merchant locations, Google Routes API distance/duration/ETA routing, and live delivery tracking after assignment.
+The platform also supports discounts, cashback points, birthday loyalty, customer-to-customer referral rewards, weekly order reminders, merchant weekly invoices, compulsory driver daily settlement, flash sales, settlement proof uploads, driver-customer chat, explicit chat alert buttons, SOS, notifications, merchant-product ratings/reputation, admin monitoring, Google Maps Platform location pin selection for customer and merchant locations, Google Routes API distance/duration/ETA routing, and live delivery tracking after assignment.
 
 | Promise | Meaning |
 |---|---|
@@ -86,7 +86,7 @@ The platform also supports discounts, cashback points, birthday loyalty, custome
 | Clear merchant responsibility | Each merchant manages only its own items. |
 | Readiness-based delivery | Drivers do not receive orders before the order is ready enough for pickup. |
 | Admin-controlled rules | Admin controls categories, zones, commissions, flash-sale rules, coupons, cashback redemption, referral reward settings, approvals, and invoices. |
-| Simple finance | Merchants settle weekly invoices; drivers must settle daily invoices either by cash at Market Home headquarters with admin drop-off, or through Wallet/InstaPay in-app proof upload. |
+| Simple finance | Merchants settle weekly invoices; drivers must settle daily invoices either by cash at Yalla Halan headquarters with admin drop-off, or through Wallet/InstaPay in-app proof upload. |
 
 [Back to top](#top)
 
@@ -97,12 +97,14 @@ The platform also supports discounts, cashback points, birthday loyalty, custome
 | Surface | Delivered to Client? | Purpose |
 |---|---:|---|
 | Customer Mobile App | Yes | Customer ordering, checkout, cashback points balance/history, order status, weekly order reminders, chat, support. |
-| Merchant Mobile App | Yes | Merchant onboarding, orders, products, categories, offers, flash sales, invoices, dashboard, and notifications. Merchant-customer chat is retired from the active product scope. |
+| Merchant Mobile App | Yes | Merchant onboarding, orders, products, categories, offers, flash sales, invoices, dashboard, and notifications. |
 | Driver Mobile App | Yes | Driver onboarding, eligible orders, pickup/drop-off steps, invoice reminders, dashboard, and driver-customer chat with explicit Alert/Ring action. |
 | Admin Web Dashboard | Yes | Platform operations, approvals, categories, zones, commissions, flash-sale rules, coupons, cashback rules, invoices, reports, support. |
 | Merchant Web Dashboard | Yes | Merchant operations and dashboard from web/tablet/desktop. |
 | Customer Web | Testing / integration only | Used for QA and API integration checks, not a main client delivery surface. |
 | Driver Web | Testing / integration only | Used for QA and API integration checks, not a main client delivery surface. |
+
+This table defines the required final delivery package. The current repository contains backend source and UI reference files, but no production frontend source; a PDF, Postman collection, or Agent Pack entry is not executable frontend evidence.
 
 [Back to top](#top)
 
@@ -112,7 +114,7 @@ The platform also supports discounts, cashback points, birthday loyalty, custome
 
 | Role | Goal | Main Actions |
 |---|---|---|
-| Customer | Order easily and save money | Register, choose custom WhatsApp or WhySMS SMS OTP when available, save addresses, browse, add item notes, checkout, use coupons, redeem cashback points, use birthday discount when eligible, share a referral code, enter an optional referral code during new registration, track orders live, chat with the assigned driver only, rate delivered merchant/product experience and assigned driver, create weekly reminders. |
+| Customer | Order easily and save money | Register, verify by custom WhatsApp or customer-only WhySMS SMS OTP when available, save addresses, browse, add item notes, checkout, use coupons, redeem cashback points, use birthday discount when eligible, share a referral code, enter an optional referral code during new registration, track orders live, chat with the assigned driver only, rate delivered merchant-product experience, and create weekly reminders. |
 | Merchant | Sell and prepare products | Register, get approved, manage products/offers under admin-assigned categories, accept/reject orders, keep product preparation defaults, adjust prep time at acceptance, run flash sales, view invoices, upload proof. |
 | Driver | Deliver ready orders | Register, get approved, go online, view eligible sorted orders, manually accept or enable optional auto-nearest accept, navigate multi-stop routes in app, pick up, deliver, use external Google Maps fallback, view invoices. |
 | Admin Staff | Operate assigned sections | Use only the dashboard sections assigned by Super Admin. |
@@ -210,13 +212,13 @@ flowchart LR
 | Item notes | Customer can write an optional note on each product line. | Notes are visible to the merchant for preparation. |
 | Checkout | Customer reviews subtotal, coupon, cashback points, birthday discount when eligible, delivery fee, and total. | Server pricing is the final truth. Delivery fee uses Google Routes distance when available: fixed amount or meter opening amount including first 1 km plus additional per-km rate after the first km. |
 | Coupons | Customer can apply admin coupons created from the Admin Dashboard. | Each coupon has a percentage, one maximum EGP cap, and merchant scope: all merchants, selected merchants only, or all merchants except selected merchants. In a multi-merchant order the coupon applies only to eligible active merchant portions. |
-| Discount funding and settlement | Updated active product truth. | Coupon and birthday discounts are split using admin-configured merchant contribution percentages, default 0% with optional merchant overrides; the platform funds the remainder. The driver pays each merchant the server-calculated payout after merchant-funded discounts, while platform-funded shares become credits on the compulsory driver daily invoice. Free delivery stays platform-funded. Merchant offers, flash sales, and valid points redemption keep their existing merchant-funded rules. |
+| Discount funding and settlement | Server-calculated rule. | Coupon and birthday discounts are split using admin-configured merchant contribution percentages, default 0% with optional merchant overrides; the platform funds the remainder. The driver pays each merchant the server-calculated payout after merchant-funded discounts, while platform-funded shares become credits on the compulsory driver daily invoice. Free delivery stays platform-funded. Merchant offers, flash sales, and valid points redemption keep their existing merchant-funded rules. |
 | Cashback points | Customer sees cashback points balance/history and can redeem points at eligible merchants. | Points are not cash and cannot be topped up, withdrawn, or transferred. |
 | Weekly orders | Customer can create from a delivered recent order or build a new template after clearing the cart. | Create/edit/Order Now/reminder loading always replaces the cart, remains editable, and requires explicit normal checkout confirmation. |
 | Status and live tracking | Customer sees one clear order timeline, receives notifications when a merchant portion is cancelled or timed out, and sees the assigned driver live on the order map during active delivery. | Live GPS starts only after driver assignment for active delivery, expires by TTL, and should not store unnecessary long-term raw history. Cancelled merchant notifications include a Browse Products action. |
-| Ratings after delivery | After a delivered order, customer can rate each delivered merchant/product experience and the assigned driver. | Ratings are allowed only after delivery. Rejected/cancelled/timeout merchant portions are not rating targets. The UI submits one 1-to-5-star rating for each delivered merchant portion; backend distributes it once to every unique purchased product under that merchant. Merchant rating is derived from product ratings. |
+| Ratings after delivery | After delivery, the customer submits one 1-to-5-star merchant-product experience rating for each delivered merchant portion. | The backend distributes the portion score once to every unique purchased product under that merchant. Product averages are derived from valid distributed ratings, and merchant rating is derived from product ratings. There are no separate per-product star controls. Rejected, cancelled, timed-out, and non-delivered portions are never rating targets. |
 | Birthday gift | Customer can receive a birthday loyalty discount once per birthday date when admin settings allow it. | Birthdate is entered once during registration or first profile completion; customer cannot edit it later except through controlled admin/support correction. |
-| Chat/call | Customer can chat only with the assigned driver for order chat, plus support/complaint channels. Phone visibility controls direct-call exposure. | Merchant-customer and merchant-driver chats are retired from active scope. Hidden phone keeps driver-customer chat and alert available where allowed but disables direct phone call. Driver can use an explicit Alert/Ring button that sends a separate customer chat alert with call-ring/alarm behavior. Normal customer-bound chat messages may use default high-priority customer-chat ring metadata, but must not use the explicit call-alert/alarm behavior. |
+| Chat/call | Customer can chat with the assigned driver for order chat, plus support/complaint channels. Phone visibility controls direct-call exposure. | Hidden phone keeps driver-customer chat and alert available where allowed but disables direct phone call. Driver can use an explicit Alert/Ring button that sends a separate customer chat alert with call-ring/alarm behavior. Normal customer-bound chat messages may use default high-priority customer-chat ring metadata, but must not use the explicit call-alert/alarm behavior. |
 
 [Back to top](#top)
 
@@ -229,13 +231,14 @@ flowchart LR
 | Account state | Merchant is pending until admin approval. | Pending or suspended merchants cannot receive normal orders. |
 | Business location | Merchant selects one Google Maps business pin during onboarding. | The pinned location is locked after approval unless admin reopens it; backend keeps lat/lng, address text, label, place metadata when available, and Google Maps helpers. |
 | Availability | Merchant can be Open or unavailable. | UI may say “Close or Busy”; the business state is accepting/not accepting orders. |
-| Orders | Merchant sees new orders and accepted/preparing history without needing ready/handoff actions. | Merchant sees only its own order portion. |
+| Orders | Merchant sees new orders and accepted/preparing history. | Merchant sees only its own order portion. |
 | Accept/reject | Merchant accepts or rejects its portion. | Rejection requires a reason and cancels only that merchant portion; the remaining order is repriced and continues when active portions remain. |
-| Preparation | Merchant product records include default preparation time. On acceptance the merchant can adjust preparation time using repeated +/- 5 minute controls and choose normal vs large-capacity eligibility. | The system computes readiness and driver visibility; merchant ready/handoff buttons are not required. The platform records preparation duration so fastest, slowest, and average preparation-time metrics can be shown. |
+| Preparation | Merchant product records include default preparation time. On acceptance the merchant can adjust preparation time using repeated +/- 5 minute controls and choose normal vs large-capacity eligibility. | The system computes readiness and driver visibility. The platform records preparation duration so fastest, slowest, and average preparation-time metrics can be shown. |
 | Products | Merchant adds/edits products with image, stock state, admin-assigned category, subcategory, details, optional offer, optional size/pricing choices, and optional related subcategory groups. | Product category must belong to merchant’s active admin-assigned category list. At least one active price choice is required: Standard only, or one or more active sizes such as S/M/L with their own prices. Related groups can only point to visible sibling subcategories under the same selected parent category. |
 | Categories | Merchant can view assigned platform categories only. | Category add/edit/remove is admin-managed after onboarding; merchant app/dashboard must not expose category assignment mutation controls. |
 | Flash sales | Merchant can launch limited flash-sale promotions while approved and eligible under the existing flash rules. | Commission grace and an effective 0% commission do not block flash sales. Existing free allowance, paid weekly plan, duration, product/account eligibility, moderation, and weekly invoice billing remain authoritative. |
 | Invoices | Merchant sees weekly invoice breakdown and uploads payment proof. | Commission grace, normal commission, paid flash-sale cost, redeemed-points cost, and payment proof are separated. Coupon/birthday merchant shares already deducted from the driver-to-merchant payout appear only as reconciliation rows and are never charged again. |
+| Customer phone privacy | Merchant receives the approved privacy reminder/shortcut while confirming an order. | A hidden customer number must remain hidden in merchant and driver projections; any permitted disclosure requires authorization and audit. |
 | Dashboard | Merchant sees sales, commission, order, rating, product performance, and preparation-time metrics. | Metrics should separate revenue from amounts due to platform and show fastest/slowest/average preparation time plus sample count when available. |
 | Ratings and reputation | Merchant rating is not an independent manual score. It is derived from ratings received by the merchant's products/merchant portions. | Product ratings are averaged per product, then merchant rating is recomputed from all product-rating documents or product averages weighted by rating count. This keeps the merchant score tied to real delivered products. |
 | Driver approaching pickup | Merchant can receive a near-arrival notification when the assigned driver is close to pickup. | Thresholds are admin-configurable by distance and/or ETA; each stop/event is sent once and deduplicated by order, stop, and event type. |
@@ -268,8 +271,9 @@ Preparation-time stats must ignore cancelled/rejected/timeout-cancelled merchant
 | Acceptance | Driver can manually accept trips or optionally enable auto-nearest accept. | Auto-nearest is off by default and must use server-side assignment locking so two drivers cannot take the same trip. |
 | Pickup | Driver confirms pickup from merchant and confirms merchant payment when required. | This confirmation moves the customer-visible status line to picked up/on the way. Assigned driver may pick eligible portions first while others continue preparing. |
 | Drop-off | Driver delivers to customer and completes delivery step. | Delivery completion finalizes order-side effects. |
-| Rating | Customer may rate the assigned driver after delivery, but the driver does not rate the customer in the active product scope. | Driver rating is separate from merchant-product ratings and is averaged on the driver profile only if the customer submits it. No driver-to-customer/customer rating is active or exposed. |
 | Maps and navigation | Driver sees in-app Google navigation/map view for the active multi-stop route and can still open Google Maps externally as fallback. | Route includes next ready pickup, remaining active pickups, and customer drop-off. Cancelled/rejected/timeout portions are removed from the route. The SOS/emergency button on the map screen is a platform emergency action, not the customer chat alert. |
+| Notification bell / DND | Driver can mute ordinary driver-ring notifications. | DND does not disable SOS, mandatory safety notices, invoice enforcement, or order-state validation. |
+| Delivery handoff | Driver sees the customer choice: `door` or `building_entrance`. | The assigned driver must acknowledge and follow the selected handoff method before completion. |
 | Invoices | Driver sees compulsory daily invoice and pays it daily. | Admin controls default/custom driver commission percent and can drop/settle cash-paid invoices from the dashboard. |
 
 [Back to top](#top)
@@ -286,13 +290,14 @@ Preparation-time stats must ignore cancelled/rejected/timeout-cancelled merchant
 | Categories | Create and manage platform categories and subcategories. |
 | Zones and locations | Manage service zones, account zone assignment, Google Maps/API readiness, live tracking thresholds, and stored lat/lng location snapshots when needed. |
 | Accounts | Browse customers, merchants, drivers; suspend/reactivate where allowed. Merchant account lists should expose fastest, slowest, and average preparation-time metrics. |
-| Ratings and quality | Monitor merchant-product bundle ratings, derived product/merchant aggregates, and optional customer-to-driver ratings; audit inappropriate comments; trigger safe recomputation if required. Customer/driver-to-customer rating is retired from the active scope. |
+| Ratings and quality | Monitor merchant-product bundle ratings and derived product/merchant aggregates; audit inappropriate comments; trigger safe recomputation if required. |
 | Finance | Configure merchant/driver commission defaults and overrides, merchant commission-free order threshold defaults/overrides, coupon/birthday merchant-contribution percentages, driver-to-merchant payout rules, daily driver credits, delivery fee pricing, invoices, credits, and payment instructions. |
 | Flash sales | Configure free launches on/off, free launch count/duration/renewal, paid weekly plan count/duration/price, and billing rules. |
 | Coupons | Create percentage coupons with a maximum cap and choose merchant scope: all, selected only, or all except selected merchants. |
 | Cashback points | Choose eligible merchants and set point-to-money redemption value per merchant. |
 | OTP channels | Configure customer-only WhySMS SMS OTP, custom WhatsApp OTP availability, cooldowns, channel switch limits, failed-attempt lockout, and abuse controls. Runtime availability and shared limits are active; admin UI controls remain a frontend/admin-surface step. |
 | Birthday loyalty | Enable/disable birthday loyalty, set max discount percent, product price cap, order subtotal cap, notification hour, and reports. |
+| Safety and alerts | Configure the Yalla Halan emergency phone, SOS enablement, chat Alert/Ring repeat duration and caps, and operational incident handling. SOS remains separate from customer chat alerts. |
 | Orders | Monitor all orders, cancelled merchant portions, timeout cancellations, delayed orders, and intervene operationally when needed. |
 | Support/reports | Manage complaints, support, reports, and broadcasts. |
 
@@ -344,7 +349,7 @@ stateDiagram-v2
 9. If no active merchant portions remain, the whole order is cancelled and the customer is notified.
 10. The customer should still be able to cancel the whole order where normal cancellation rules allow it, but the platform does not block the remaining accepted portions just because one merchant rejected or timed out.
 
-Example: if a customer orders from 5 merchants and 1 merchant rejects, that merchant portion is cancelled with its note, the customer is notified, the order is repriced for the remaining merchants, delivery distance/fee is recalculated, cashback/coupon totals are recalculated, and the customer can browse again to place a separate order for replacement items.
+Example: with the default limit, if a customer orders from 4 merchants and 1 merchant rejects, that merchant portion is cancelled with its note, the customer is notified, the order is repriced for the remaining 3 merchants, delivery distance/fee and discount totals are recalculated, and the customer can browse again to place a separate order for replacement items.
 
 [Back to top](#top)
 
@@ -411,7 +416,7 @@ Merchant category rules:
 |---|---|---|
 | Product offer | Merchant | Product appears with a discounted/offer price. |
 | Coupon | Admin | Customer receives a percentage discount with a maximum cap. |
-| First-order/free delivery | Admin | When no positive coupon-code or birthday loyalty discount is used, an eligible order receives platform subsidy up to the admin-configured cap, default 30 EGP; the customer pays any delivery-fee remainder above that cap. Coupon/birthday savings take precedence and suppress this benefit. Applied free-delivery subsidy is platform-funded and reported against platform share/amount due. |
+| Eligible free-delivery promotion | Admin | When no coupon or birthday loyalty discount is used, an eligible order receives platform subsidy up to the admin-configured cap, default 30 EGP; the customer pays any delivery-fee remainder above that cap. Coupon/birthday savings take precedence and suppress this benefit. Applied free-delivery subsidy is platform-funded and reported against platform share/amount due. |
 | Flash sale | Merchant under admin rules | Product gets urgent limited-time promotion. |
 | Cashback points | Customer uses points under admin redemption rules | Points reduce eligible merchant portion price. |
 
@@ -465,6 +470,8 @@ Redemption example:
 
 [Back to top](#top)
 
+<a id="customer-referral-points"></a>
+
 ### Customer Referral Points
 
 Customer referral rewards let one customer invite another customer using a referral code. Rewards are points inside the existing points system, not cash and not a separate wallet.
@@ -480,6 +487,8 @@ Customer referral rewards let one customer invite another customer using a refer
 | Reports | Admin can review referral links, first-delivered-order trigger status, points awarded, and suspicious/duplicate attempts. |
 
 [Back to top](#top)
+
+<a id="birthday-loyalty-discount"></a>
 
 ### Birthday Loyalty Discount
 
@@ -555,7 +564,7 @@ Meter pricing example:
 | Additional per-km rate | 8 EGP/km |
 | Delivery fee | 40 EGP |
 
-First-order free delivery applies up to the admin-configured subsidy cap. It turns the fee into zero only when the calculated fee does not exceed that cap; otherwise the customer pays the remainder.
+An eligible free-delivery promotion applies up to the admin-configured subsidy cap. It turns the fee into zero only when the calculated fee does not exceed that cap; otherwise the customer pays the remainder.
 
 [Back to top](#top)
 
@@ -613,7 +622,7 @@ Weekly Orders are reusable customer-owned templates. They never auto-submit a pu
 
 ### 16.6 Backend Transition Rule
 
-The implemented V2 flow lazily migrates eligible legacy `templateOrderId` templates to reusable snapshots and emits reminder notifications that open cart materialization. It does not create new `weekly_suggestion` Orders. Historical templates, source Orders, suggestion Orders, and their compatibility actions remain readable; no path auto-submits an order.
+The active flow can migrate eligible legacy `templateOrderId` templates to reusable snapshots and emits reminder notifications that open cart materialization. It does not create new `weekly_suggestion` Orders. Existing compatible records may remain readable, but no path auto-submits an order.
 
 [Back to top](#top)
 
@@ -621,10 +630,10 @@ The implemented V2 flow lazily migrates eligible legacy `templateOrderId` templa
 
 ## 17. Merchant Weekly Invoices, Driver Daily Settlement, and Print Receipts
 
-Market Home uses separate settlement rules for merchants and drivers.
+Yalla Halan uses separate settlement rules for merchants and drivers.
 
 - Merchants settle platform dues on a weekly invoice.
-- Drivers must settle their invoice every day. Daily settlement is compulsory. The driver can pay by Wallet/InstaPay inside the app and upload a receipt image, or can pay cash at Market Home headquarters. When cash is paid at headquarters, admin marks/drops the driver invoice from the admin dashboard.
+- Drivers must settle their invoice every day. Daily settlement is compulsory. The driver can pay by Wallet/InstaPay inside the app and upload a receipt image, or can pay cash at Yalla Halan headquarters. When cash is paid at headquarters, admin marks/drops the driver invoice from the admin dashboard.
 - Payment proof remains reviewable by admin for Wallet/InstaPay payments. Cash-at-HQ settlement is an admin action and must keep an audit note.
 
 ### Merchant Weekly Invoice
@@ -650,7 +659,7 @@ Market Home uses separate settlement rules for merchants and drivers.
 | Commission percent | Driver custom percent if set; otherwise global driver default. |
 | Platform-funded credits | The platform-funded coupon, birthday, and free-delivery shares are shown separately and reduce the compulsory driver daily invoice because the driver paid the merchant those platform-funded amounts. |
 | Discount incompatibility | Coupon-code and birthday loyalty discounts cannot coexist. Either positive discount suppresses free delivery; a conflicting checkout returns `ORDER_DISCOUNT_BENEFIT_CONFLICT` with `suggestedAction=remove_coupon`. Cashback redemption remains separate and may coexist under its merchant-funded admin rules. |
-| Payment methods | Wallet or InstaPay inside the app with receipt image upload; or cash at Market Home headquarters. |
+| Payment methods | Wallet or InstaPay inside the app with receipt image upload; or cash at Yalla Halan headquarters. |
 | Admin cash handling | If paid cash at headquarters, admin drops/settles the driver invoice from the dashboard with audit note and settlement actor. |
 | Total due | Gross daily driver/platform liability minus platform-funded credits. Any excess credit remains explicit instead of disappearing at a zero floor. |
 
@@ -660,7 +669,7 @@ The Merchant App must support printing a professional receipt for each merchant 
 
 | Receipt Field | Requirement |
 |---|---|
-| Brand | Use restaurant/merchant name and optional merchant logo only. Do not show Market Home branding, Market Home phone, platform commission, or internal platform settlement fields. |
+| Brand | Use restaurant/merchant name and optional merchant logo only. Do not show Yalla Halan branding, Yalla Halan phone, platform commission, or internal platform settlement fields. |
 | Order reference | Show customer-facing order number and internal order ID where available. |
 | Driver | Show assigned driver name when assigned. |
 | Code | Show the order/merchant pickup code used by the merchant/driver flow. |
@@ -675,14 +684,17 @@ The Merchant App must support printing a professional receipt for each merchant 
 
 | Area | Product Rule |
 |---|---|
-| Chat | Active order chat is driver-customer only. Merchant-customer and merchant-driver chat are retired/non-active. Support and complaint threads remain separate from order chat. |
+| Chat | Active order chat is between the assigned driver and customer. Support and complaint threads remain separate from order chat. |
 | Unread counters | Users should see unread chat badges/counts. |
-| Chat alert button | Driver can press an explicit Alert/Ring button inside customer-driver order chat to send a customer chat alert with call-ring/alarm sound where available. Merchant-to-customer and merchant-driver alerts are retired. Normal chat pushes to the customer keep `customer_chat_ring` metadata only and must not use `customer_chat_call_alert`. |
+| Chat alert button | Driver can press an explicit Alert/Ring button inside customer-driver order chat to send a customer chat alert with call-ring/alarm sound where available. Normal chat pushes to the customer keep `customer_chat_ring` metadata only and must not use `customer_chat_call_alert`. |
+| SOS / emergency | The driver map SOS button alerts the platform and starts a phone call to the admin-configured Yalla Halan emergency number. | 
 | Calls | Direct call is available only when customer phone visibility allows it. |
 | Notifications | Used for account approval, orders, chat, invoices, weekly reminders, and support. |
 | Support | Customers, merchants, and drivers can contact support or submit complaints where supported. |
 
-Chat alert rule: the driver Alert/Ring action is not a voice call and does not open a voice channel. It creates a visible chat alert/system event for the customer and plays a call-ring/alarm sound when available. The customer cannot reply to the alert object itself, but can open the customer-driver chat and respond normally. Merchant-to-customer, customer-to-merchant, merchant-to-driver, and driver-to-merchant order chat/alert paths are retired/non-active. Repetition is controlled by admin dashboard safety settings: `chatAlertRepeatSeconds` defines when the button becomes available again, with per-driver/per-order caps and terminal-state blocking. It must not be blocked merely because a previous alert is still unacknowledged.
+Chat alert rule: the driver Alert/Ring action is not a voice call and does not open a voice channel. It creates a visible chat alert/system event for the customer and plays a call-ring/alarm sound when available. The customer cannot reply to the alert object itself, but can open the customer-driver chat and respond normally. Repetition is controlled by admin dashboard safety settings: `chatAlertRepeatSeconds` defines when the button becomes available again, with per-driver/per-order caps and terminal-state blocking. It must not be blocked merely because a previous alert is still unacknowledged.
+
+SOS is a separate safety action on the navigation map. It must never reuse the customer chat-alert channel or its cooldown semantics.
 
 [Back to top](#top)
 
@@ -700,7 +712,11 @@ Chat alert rule: the driver Alert/Ring action is not a voice call and does not o
 | Flash sales | Free launches on/off, free count/duration/renewal, paid weekly plan count/duration/price, and weekly invoice billing are clear. |
 | Coupons | Percentage, one maximum cap, and all/include/exclude merchant scope are clear. |
 | Cashback/referrals | Points are not cash; cashback and referral earning/redemption rules are clear. Referral inviter reward waits for invited customer first delivered order. |
+| Ratings | One merchant-product experience score per delivered merchant portion is distributed to unique purchased products; there is no separate per-product input. |
+| Privacy and handoff | Hidden customer phone, audited disclosure, driver DND boundaries, and door/building-entrance choice are clear. |
+| Safety | Driver-map SOS is separate from the customer chat Alert/Ring and uses the admin-configured emergency number. |
 | Admin | Super Admin creates staff and assigns sections. |
+| Evidence | A target surface is not marked complete unless executable source and verification evidence exist. |
 
 [Back to top](#top)
 
@@ -724,10 +740,12 @@ This part gives implementation teams enough detail to build and test correctly.
 | Catalog | Categories, subcategories, products, offers, favorites, merchant pages. |
 | Orders | Draft, checkout, merchant portions, preparation, driver assignment, delivery, status projections. |
 | Finance | Commissions, weekly invoices, flash-sale costs, receipts/proofs, overdue handling. |
-| Promotions | Coupons, first-order free delivery, flash sales, product offers. |
+| Promotions | Coupons, eligible free-delivery promotions, flash sales, product offers. |
 | Cashback points | Points balance/history, redemption preview, reserve/commit/restore/reverse. |
 | Weekly orders | Named templates, scheduled reminders, confirm/dismiss suggestions. |
-| Chat/notifications | Order-scoped chat, unread counters, push/inbox notifications. |
+| Chat/notifications | Assigned driver-customer order chat, unread counters, push/inbox notifications, and separate Alert/Ring behavior. |
+| Safety and privacy | Driver-map SOS, emergency phone, customer phone visibility, DND boundaries, and delivery handoff preference. |
+| Integrations and media | WhySMS, WhatsApp OTP, Firebase, Google Maps/Routes, and protected Hostinger-hosted media. |
 | Admin operations | Monitoring, approvals, permissions, rules, reports, support. |
 
 [Back to top](#top)
@@ -754,20 +772,20 @@ Admin dashboard action/data-scope labels are descriptive metadata for dashboard 
 
 1. A customer order can contain one or multiple merchant portions.
 2. One customer order must not exceed the admin-configured merchant cap. The default is **4 distinct merchants per order** and the active value is stored as a snapshot on the order.
-3. Each merchant portion has its own accept/reject/preparing/ready behavior.
+3. Each merchant portion has its own accept/reject/preparing state and server-computed readiness time.
 4. Admin controls the maximum merchant response time before a pending portion is cancelled by timeout.
 5. Merchant rejection requires a rejection reason note.
 6. Merchant rejection or timeout cancels only that merchant portion by default, not the entire order.
 7. The customer receives a notification containing the cancelled merchant, the reason, and a Browse Products action for placing a separate replacement order if desired.
 8. If at least one active merchant portion remains, the order continues with the remaining portions after server repricing.
 9. If no active merchant portions remain, the whole order is cancelled.
-10. Driver discovery is not allowed before readiness rules are satisfied.
-11. Single-merchant order appears to drivers after that merchant portion is ready.
-12. Multi-merchant order can appear when the first accepted active portion is ready.
+10. Driver discovery is allowed only inside the admin-configured pre-readiness window; the default lead time is 5 minutes.
+11. A single-merchant order can appear to eligible drivers inside that window before the computed readiness time.
+12. A multi-merchant order can appear when at least one accepted active portion enters that window.
 13. Driver may pick ready active portions while other accepted active portions continue preparing.
 14. Big/large-capacity orders are visible only to large-capacity drivers: car or tricycle. Compatibility field names may still say `requiresCarDriver` / `requiresCarDelivery`.
 15. Zone, vehicle, account state, online state, and rejection history affect driver eligibility.
-16. Ratings can be created only after order delivery, and only for delivered active merchant portions/products and the assigned driver.
+16. Ratings can be created only after order delivery and only for delivered active merchant portions/products.
 17. Customer phone visibility controls whether merchant/driver direct-call is allowed.
 18. Product line items with active size choices must snapshot the selected `Standard`/`S`/`M`/`L` option, label, and unit price at draft/order creation. Server-side pricing remains authoritative.
 
@@ -815,7 +833,7 @@ flowchart TD
     E --> F["Meter fee = opening fee + extra distance x per-km-after-first rate"]
     C --> G["Server snapshots the calculated delivery fee"]
     F --> G
-    G --> H{"First-order free delivery applies?"}
+    G --> H{"Eligible free-delivery promotion applies?"}
     H -- "Yes" --> I["Apply min(calculated fee, admin subsidy cap); customer pays remainder"]
     H -- "No" --> J["Use the calculated delivery fee"]
 ```
@@ -829,7 +847,7 @@ flowchart TD
 | Additional distance | `max(distanceKmTotal - 1, 0)`. |
 | Additional rate | Applied only to kilometers after the first km. |
 | Rounding | Money values round to two decimals. |
-| First-order free delivery | If eligible, apply the lower of the calculated fee and the stored admin subsidy cap; the customer pays any remainder. |
+| Free-delivery subsidy | If eligible, apply the lower of the calculated fee and the stored admin subsidy cap; the customer pays any remainder. |
 | Multi-stop updates | Multi-stop route distance and delivery fee update when merchant portions are removed by rejection or timeout. |
 | Legacy naming | Existing code may use `baseFee` and `perKmRate`, but active wording must make first-kilometer inclusion clear. |
 
@@ -839,21 +857,23 @@ flowchart TD
 
 ## 25. Finance and Invoice Rules
 
+<a id="merchant-commission-grace-and-discount-cost-sharing"></a>
+
 | Rule | Requirement |
 |---|---|
 | Merchant default commission | Admin sets platform default merchant percent. |
 | Merchant override | Admin can set custom percent for one merchant; custom wins over default. |
 | Commission-free threshold | Admin sets a global default count, default `0`, and may override it per merchant. The first N eligible delivered merchant portions use `0%`; normal commission starts at N+1. |
-| Eligible count | One delivered active merchant portion counts once. Rejected/cancelled/timeout/non-delivered/test portions and item quantities do not count. |
+| Eligible count | One delivered active merchant portion counts once. Rejected, cancelled, timed-out, non-delivered, UAT/test portions, weekly templates, suggestions, and item quantities do not count. |
 | Driver default commission | Admin sets platform default driver percent. |
 | Driver override | Admin can set custom percent for one driver; custom wins over default. |
 | Merchant weekly invoice | Weekly commission settlement plus paid flash-sale plan/usage and other unsettled merchant liabilities. Coupon/birthday/points amounts already deducted from merchant payout are reconciliation-only and must not be charged again. |
 | Promotion funding split | Coupon and birthday discounts use admin-configured merchant contribution percentages with defaults `0%` and optional merchant overrides; the remainder is platform-funded. The driver pays the merchant the server-derived payout after merchant-funded shares, and platform-funded shares reduce the driver's compulsory daily invoice. Free delivery remains fully platform-funded. |
 | Driver daily invoice | Driver invoice is generated/settled daily and is compulsory. It contains explicit platform-funded coupon, birthday, and free-delivery credits, and supports Wallet/InstaPay proof upload or cash-at-HQ admin drop/settlement. |
-| Discount exclusivity | Free delivery cannot be used with coupon-code discounts or birthday loyalty discounts on the same checkout/order. |
+| Discount exclusivity | Coupon and birthday discount cannot coexist. Free delivery cannot coexist with either coupon-code or birthday loyalty discount on the same checkout/order. |
 | Payment proof | Merchant/driver uploads proof for Wallet/InstaPay payments; admin approves/rejects. Cash-at-HQ driver payment is settled by admin with audit note. |
 | Overdue handling | Overdue unpaid invoices can restrict/suspend the account according to platform rules. |
-| Merchant print receipt | Merchant can print a restaurant-branded order receipt with no Market Home branding or platform settlement data. |
+| Merchant print receipt | Merchant can print a restaurant-branded order receipt with no Yalla Halan branding or platform settlement data. |
 
 [Back to top](#top)
 
@@ -957,7 +977,7 @@ Rules:
 | Pricing | Recompute in normal preview/checkout; template/history price is not billing truth. |
 | Unavailable handling | Return explicit reason codes so customer can remove/replace items. |
 | Idempotency | Prevent duplicate reminders/materializations for the same persisted occurrence. |
-| Legacy migration | Existing `templateOrderId` templates and `weekly_suggestion` records must migrate or remain safely compatible without data loss. |
+| Compatibility | Existing compatible template records must migrate or remain readable without data loss; no legacy record may submit an order automatically. |
 
 [Back to top](#top)
 
@@ -977,25 +997,28 @@ Rules:
 
 [Back to top](#top)
 
-<a id="30-api-and-qa-handoff-summary"></a>
+<a id="31-api-and-qa-handoff-summary"></a>
 
 ## 31. API and QA Handoff Summary
 
-Exact endpoints belong in backend API docs and Postman. This PRD defines behavior and acceptance.
+Exact endpoints belong in backend API docs and Postman. This PRD defines behavior and acceptance. `/api/v1` is the canonical API base; `/api` is a legacy compatibility alias only and must not be presented as the canonical integration path.
 
 | Group | QA Focus |
 |---|---|
 | Orders | Draft, checkout, merchant portions, merchant cap default 4 and admin override, merchant rejection reasons, merchant-response timeout cancellations, repricing after cancelled portions, Google route/delivery snapshots, readiness, driver assignment, live tracking, near-arrival events, completion. |
-| Ratings and reputation | Delivered-order rating, merchant-portion/product fan-out, product averages, merchant aggregate from product ratings, driver rating, duplicate-rating prevention, rejected/cancelled portion exclusion. |
+| Ratings and reputation | Delivered-order rating, one score per delivered merchant portion, product fan-out, product averages, merchant aggregate from product ratings, duplicate-rating prevention, and rejected/cancelled/timeout portion exclusion. |
 | Merchant categories | List assigned categories only, hide merchant add/edit/remove controls, and validate product binding to admin-assigned categories. |
 | Finance | Commission defaults/overrides, invoices, proof upload, flash-sale costs. |
-| Promotions | Coupons, flash sales, product offers, first-order delivery. |
+| Promotions | Coupons, flash sales, product offers, and eligible free-delivery subsidy. |
 | Cashback | Points balance/history, redemption preview, commit/restore/reverse. |
 | Weekly orders | Create from recent order or new builder, full cart replacement, snapshot save/edit/toggle/delete, Order Now, reminder materialization, unavailable-item handling, explicit checkout confirmation. |
 | Google Maps / Routes | Customer/merchant pin flows, Google Maps helpers, Google Routes distance/ETA/delivery fee snapshots, multi-stop route updates. |
 | Driver navigation | Manual accept, optional auto-nearest accept, assignment locking, active multi-stop route projection, in-app Google navigation, external Google Maps fallback. |
 | Birthday loyalty | Birthdate immutability, admin settings, checkout pricing, popup seen state, birthday notification, and admin reports. |
 | Chat/notifications | Threads, unread counters, push/inbox records. |
+| Safety/privacy/handoff | SOS versus chat Alert/Ring separation, admin emergency phone and repeat settings, driver DND boundaries, hidden customer phone, and `door`/`building_entrance` acknowledgement. |
+| Authorization/security | Authentication, current account status, role/permission checks, tenant/ownership/assignment isolation, rate limits, upload content validation, private media, OTP purpose/atomicity, Socket parity, and negative tests. |
+| Production | Hostinger deployment, MongoDB Replica Set, HTTPS/CORS/proxy, providers, backup/restore, monitoring, real frontend builds, and live E2E evidence. |
 
 Verification should include install, build, lint, tests, seeded live smoke, and local server startup. Seeded smoke is not the same as full endpoint-matrix coverage.
 
@@ -1030,253 +1053,24 @@ Verification should include install, build, lint, tests, seeded live smoke, and 
 | Admin-configurable cashback earn rate | Not active | Earn rate is fixed at 1 paid merchandise EGP = 1 point. |
 | Commission-only coupons | Not active | Coupons are customer-facing percentage discounts with a cap. |
 | Flash-sale free-beta wording | Not active | Admin-configured free quota and paid weekly plan rules are the current truth. |
+| Customer online payment / Paymob | Retired | Customer checkout has no electronic-payment flow in this release. |
+| Merchant-customer or merchant-driver order chat | Retired | Active order chat is assigned driver-customer only. |
+| Customer-to-driver or driver-to-customer rating | Retired | Active rating is the merchant-product experience only. |
+| Merchant ready/waiting/handoff buttons | Retired | Readiness and driver visibility are computed from acceptance and preparation time. |
+| Automatic weekly purchase or cart merge | Retired | A reminder only loads an editable cart and requires explicit checkout. |
+| Vercel as production hosting | Retired | Production target is Hostinger VPS; Vercel material is UAT/archive only. |
+| Paid cloud-media subscription | Not active | Production media is stored on the protected Hostinger filesystem/mounted path. |
 
 [Back to top](#top)
 
 ## Database, Live API, and Secret Governance Readiness
 
+- Production targets Hostinger VPS, protected VPS media storage, HTTPS, and a MongoDB deployment with Replica Set support.
+- Customer checkout has no electronic-payment flow in this release. Wallet/InstaPay proof upload is only for merchant/driver settlement with the platform.
+- `/api/v1` is canonical. `/api` may remain only as a documented compatibility alias.
+- Current frontend PDFs are UI references, not runnable surfaces; production completion requires actual customer, merchant, driver, and admin source plus verification.
 - Seeded live smoke is not a full API coverage claim.
 - The full live API matrix requires a MongoDB test replica set because some registration paths use MongoDB transactions.
 - If MongoDB is reachable but standalone and reports `replicaSet: null`, the full matrix is blocked/skipped, not passed.
 - The project must not claim all APIs were tested unless the full matrix passes with prerequisites.
 - Google, FCM, custom WhatsApp, WhySMS, JWT, upload signing, and database credentials are deployment/secret-manager values and must not appear as real values in docs, Postman, or env examples.
-
-
-<a id="31-order-readiness-driver-visibility-and-chat-retirement"></a>
-## 31. Order Readiness, Driver Visibility, and Chat Retirement Rules
-
-This section supersedes older merchant-ready/handoff assumptions where they conflict with the rules below.
-
-| Area | Accepted Rule |
-|---|---|
-| Product prep time | Each product has a default preparation time set when the merchant creates or edits the product. Admin may provide fallback/default preparation-time settings. |
-| Merchant acceptance | Merchant accepts or rejects only. On acceptance, merchant confirms whether the order is normal or large-capacity eligible and may adjust preparation time using repeated +/- 5 minute increments. |
-| Auto readiness | The system computes merchant readiness time from acceptance time plus the selected preparation duration. Merchant is not required to press ready, waiting for driver, or handed to driver. |
-| Driver early visibility | Orders can appear to eligible drivers before full readiness by an admin-configurable lead time. Default lead time is 5 minutes. |
-| Bicycle/cycle cap | Orders whose Google route distance exceeds the admin-configured bicycle/cycle kilometer cap must not appear to bicycle/cycle drivers. |
-| Large-capacity orders | Large orders require car or tricycle. Normal orders can appear to all eligible driver vehicle types subject to distance, zone, account, online, and rejection-history rules. |
-| Driver pickup/payment | Driver confirms pickup from merchant and confirms merchant payment when required. This updates the customer-visible status line to show that the driver picked up the order and is on the way. |
-| Chat topology | Merchant-customer chat and merchant-driver chat are retired from active product scope. The only active order chat is driver-customer chat. Support threads, complaints, and admin-visible audit/notification records remain available where allowed. |
-| Customer status line | Customer should see simple states such as merchant is preparing, driver is heading to pickup, driver picked up and is on the way, and delivered. The customer should not see operational merchant ready/handoff complexity. |
-
-
-<a id="32-driver-customer-only-chat-topology"></a>
-## 32. Driver-customer Only Chat Topology
-
-This section supersedes older assumptions that allowed merchant-customer or merchant-driver order chat.
-
-| Area | Accepted Rule |
-|---|---|
-| Active order chat | The only active order chat is between the assigned driver and the customer. |
-| Merchant-customer chat | Retired/non-active. Merchant-to-customer messages, threads, unread counters, and alerts must not be exposed in active product surfaces. |
-| Merchant-driver chat | Retired/non-active. The merchant should not need chat with the driver as part of the normal pickup flow; pickup/payment is confirmed by the driver workflow. |
-| Driver Alert/Ring | The driver can send a visible in-chat/system alert to the customer with call-ring/alarm behavior where the customer can receive it. This is not a voice call and does not open an audio channel. It is separate from the navigation SOS/emergency button. |
-| Phone visibility | Direct phone call availability is controlled by customer phone visibility. If the phone is hidden, direct call is disabled while driver-customer chat and the Alert/Ring action remain available where allowed. |
-| Cooldowns | Driver Alert/Ring uses admin-configured repeat duration plus per-driver/per-order caps and terminal-state blocking. The repeat duration belongs in the admin dashboard safety settings. |
-| Docs/Postman/tests | API docs, Postman collections, runtime endpoint inventory, surface handoff, and tests must mark merchant-customer and merchant-driver chat paths as retired/non-active while proving driver-customer chat and alert work. |
-
-[Back to top](#top)
-
-
-## UI Safety Addendum - Driver Navigation SOS vs Customer Chat Alert
-
-The Delivery App UI separates two actions that must not share backend behavior:
-
-| UI pages | Action | Backend meaning | Recipient | Admin configuration |
-|---|---|---|---|---|
-| Pages 15-17, top-right icon beside the active navigation map | SOS / Emergency | Driver platform emergency request during active navigation. Backend persists a `DriverEmergencyEvent`, notifies active admins/platform operators, and returns the Market Home emergency phone snapshot so the mobile app can open the native dialer. | Platform/admin team; optional phone call to Market Home emergency number. | `GET/PATCH /admin/safety/settings` controls `emergencySosEnabled`, `marketHomeEmergencyPhone`, and `emergencySosRepeatSeconds`. |
-| Pages 18-20, customer-driver chat bottom sheet | Alert Customer | Customer chat alert/ring inside the customer-driver chat. Backend creates a system chat message and `ChatAlert`, pushes `PUSH_CUSTOMER_CHAT_CALL_ALERT`, and stores an inbox notification for the customer. | Customer only. | `GET/PATCH /admin/safety/settings` controls `chatAlertEnabled`, `chatAlertRepeatSeconds`, caps, and sound. |
-
-The navigation SOS button must not message the customer, must not create a chat alert, and must not be mixed with the page 18-20 customer alert sheet. The customer alert must not call the Market Home emergency phone. The admin dashboard setting for alert duration is only the repeat/cooldown duration for the chat alert availability copy and button re-enable time.
-
-## Appendix: Merchant + Delivery UI Audit Alignment - 2026-06-17
-
-This appendix records the current UI audit without changing the accepted product truth.
-
-- MerchantApp pages 18-29 label product related suggestions in two ways: `Related sub category` during add product and `Add-ons` during edit product. Both labels map to the same backend/PRD concept: `relatedSubcategoryIds[]`, selecting sibling subcategories under the same admin-assigned parent category. This is not a separate add-on item entity.
-- MerchantApp pages 33-35 Flash Sales must follow section 14 and section 26: admin controls free launch enablement, count, duration, optional weekly renewal, paid weekly plan enablement/count/duration/price, and weekly invoice billing. Copy such as `Limited in Beta`, `Free for now`, or `Times: 3` is display copy only when derived from current admin rules.
-- Flash Sales are not hourly billed. Paid usage is a weekly plan/subscription invoice component, not an immediate pay-now requirement.
-- MerchantApp page 34 banner/background upload, custom title, explicit `Pay now`, and arbitrary `Total Cost` are not active backend requirements unless a future PRD revision accepts them.
-- DeliveryApp pages 15-17 SOS and pages 18-20 Customer Alert remain separate: SOS alerts platform/admin and can dial Market Home emergency phone; Customer Alert is a driver-customer chat attention event.
-
-
----
-
-## Phase 38 UI/Finance Update - Active Product Truth Snapshot
-
-This historical Phase 38 snapshot is superseded for coupon/birthday funding by Phase 46. Driver-daily settlement truth remains active.
-
-1. Driver invoices are daily and compulsory. Wallet/InstaPay payment uses in-app receipt upload; cash payment at headquarters is settled/dropped by admin from the dashboard.
-2. Free-delivery savings remain fully platform-funded. Coupon and birthday discounts now use the Phase 46 admin-configured merchant contribution split, with default 0% and optional merchant overrides.
-3. Merchants also carry merchant-created product offers, flash-sale plan/usage costs, valid redeemed-points discounts, and their configured coupon/birthday contribution.
-4. Free delivery cannot be combined with coupon-code discounts or birthday loyalty discounts in the same checkout/order.
-5. Merchant print receipt is a new accepted requirement: print a restaurant-only receipt with merchant name, order number, order ID, driver name, code, and merchant portion contents. Market Home branding and platform finance data must not appear on the receipt.
-
-## Deployment/Test Handoff Addendum — Vercel UAT
-
-For the current frontend integration stage, the backend supports a temporary Vercel REST/API smoke deployment before live Meta WhatsApp, WhySMS, Firebase, and Google Maps/Routes keys are available.
-
-Rules:
-- Vercel UAT is not real production and must use `DEPLOYMENT_TEST_MODE=true`.
-- Seeded password login is allowed for frontend/Postman testing.
-- OTP provider may be `console` during UAT only.
-- FCM delivery may be disabled during UAT; notification records and metadata remain testable.
-- Google route distance may use `geometric_estimate` during UAT; live Google Routes must be enabled before production.
-- Long-lived Socket.IO and cron workers are not fully represented by Vercel serverless and require a long-lived Node host or worker runtime for final production verification.
-- Demo accounts for Admin, Merchant, Driver, and Customer are created only after `npm run seed:vercel-test` succeeds against an isolated disposable database whose name contains `test`, `uat`, or `demo`; the UAT database must never be promoted to production.
-
-This addendum does not change the final production truth: real production must disable deployment test mode and provide live provider credentials.
-
-### Final Production Host and Provider Readiness
-
-- Final production runs on a long-lived Hostinger VPS; Vercel remains a temporary REST/UAT surface only.
-- Production uploads use persistent VPS storage through `UPLOADS_ROOT_DIR=/var/www/markethome/uploads`, never Vercel `/tmp`.
-- Required live integrations are Meta WhatsApp OTP for customer/merchant/driver, WhySMS SMS OTP for customers only, Firebase/FCM, and Google Maps/Routes.
-- Firebase uses `FIREBASE_PROJECT_ID` plus either deployment-managed inline service-account JSON or a protected credentials file.
-- MongoDB, domain/DNS, media storage, monitoring, and backups are owner/VPS operational setup. MongoDB Atlas, Cloudinary/R2, and Vercel production subscriptions are not required by the current plan.
-- Online payment and Paymob remain outside this release.
-- Provider readiness is reported only as configured, missing, or test-mode; secrets must never be exposed. `/health` remains liveness-only.
-
-## Current frontend handoff cleanup — 2026-06-25
-
-The current MerchantApp and DeliveryApp UAT handoff uses the cleaned Postman set under `backend/docs/postman/`. Merchant product deletion is now an explicit merchant-scoped soft-delete endpoint: `DELETE /api/v1/merchant/products/:id`. Deleted products must be hidden from merchant product lists and customer catalog/search surfaces while historical order references remain intact.
-
-The MerchantApp `Related sub category` field maps to `relatedSubcategoryIds[]`. Delivery SOS remains separate from chat customer alert/ring.
-
-
-## Product KPI pages 31-33
-
-MerchantApp product detail KPI tabs are covered by `GET /merchant/products/:id/kpis` and section endpoints for `financial`, `orders`, and `ratings`, with `today/weekly/monthly/yearly` period filters. The ratings tab uses the product-rating aggregate that comes from delivered order ratings only; it must not count cancelled portions, rejected portions, or ratings for products outside the delivered order.
-
-## Final Rating and Reputation System — Locked Product Truth
-
-### Current backend rating foundation
-
-The backend may still contain legacy generic `Rating` support for multiple `targetType` values. The **active product truth** is now stricter: the customer rates the delivered products of each merchant portion with **one star score from 1 to 5**. That one score is then distributed to the unique purchased products under that merchant portion for product KPI and merchant reputation calculations.
-
-Driver-to-customer/customer rating is **retired and not part of the active product scope**. Drivers must not rate customers. Any legacy `targetType=customer` behavior must be treated as deprecated, hidden, and excluded from new APIs, Postman, UI flows, reports, and PRD truth.
-
-### Final product behavior
-
-| Target | Who Rates | Active UI Input | How It Is Calculated | Where It Appears |
-|---|---|---|---|---|
-| Merchant products bundle | Customer after delivered order | One 1–5 star score per delivered merchant portion/order segment. | The same score is applied to every unique product purchased from that merchant portion once per product per order, not once per quantity unit. | Order rating screen, product KPI page 33, admin quality audit. |
-| Product aggregate | System derived from bundle score fan-out | No separate per-product star control in the final active UI. | Average of all product rating records created from delivered merchant-portion ratings. Stores `averageRating` and `ratingsCount`. | Product card/detail, MerchantApp product KPIs, Admin product quality reports. |
-| Merchant aggregate | System derived from product aggregates/records | No separate manual merchant rating. | Average derived from ratings of that merchant's products, preferably weighted by product `ratingsCount`. | Customer merchant card/page, merchant dashboard, admin merchant list/details. |
-| Driver | Customer after delivered order, if the UI asks for driver service rating | One optional 1–5 star score for the assigned driver. | Separate driver average; it never affects merchant or product rating. | Driver profile/dashboard and admin driver quality views. |
-
-### Distribution and validation rules
-
-1. Ratings are accepted only after the order reaches `delivered`.
-2. The reviewing customer must own the delivered order.
-3. Product/merchant-product ratings are grouped merchant by merchant in multi-merchant orders.
-4. For each merchant portion, the customer submits **one integer star score from 1 to 5** for all delivered products of that merchant in the order.
-5. The backend fans out that one merchant-portion score to every unique purchased product under that merchant portion once per product, not once per quantity unit.
-6. Rejected, cancelled, timeout-cancelled, and non-delivered merchant portions are excluded.
-7. A product can receive a distributed rating only if it was actually purchased inside the delivered active merchant portion.
-8. Duplicate merchant-portion product-bundle rating for the same order, customer, and merchant portion is blocked.
-9. Duplicate driver rating for the same order, customer, and assigned driver is blocked when driver rating is enabled.
-10. Comments are optional, trimmed, and limited to moderation-friendly length.
-11. Product aggregates store `averageRating` and `ratingsCount`.
-12. Merchant aggregates are recalculated after affected product ratings change.
-13. Driver aggregates store `averageRating` and `ratingsCount` only for customer-to-driver ratings.
-14. Driver-to-customer/customer rating is disabled in active scope. It must not appear in UI, Admin Dashboard, Postman active collections, quality reports, or new endpoint contracts.
-15. Admin can inspect rating details, moderate comments, and run recalculation/audit tooling if aggregates become stale.
-
-### API interpretation
-
-The preferred final API shape is a compact order-rating payload where the frontend sends `merchantPortionRatings[]`; each item contains `merchantId`, `rating` from 1 to 5, and optional comment. The backend performs the product fan-out server-side so the frontend does not have to send one request per product.
-
-Suggested body shape:
-
-```json
-{
-  "merchantPortionRatings": [
-    {
-      "merchantId": "<merchantId>",
-      "rating": 5,
-      "comment": "Optional merchant products experience comment"
-    }
-  ],
-  "driverRating": {
-    "rating": 5,
-    "comment": "Optional driver service comment"
-  }
-}
-```
-
-`driverRating` is optional and represents customer-to-driver only. There is no driver-to-customer/customer rating payload in the final active API.
-
-## PHASE40_ADMIN_CONFIG_LIMITS — Locked Product Update
-
-- Admin can configure `maxMerchantsPerOrder`; default is **4** distinct merchants per customer order.
-- Admin can configure `freeDeliveryMaxSubsidyEgp`; default is **30 EGP** per eligible order.
-- Checkout must enforce a single benefit per order: no free delivery with coupon or birthday discount, and no coupon + birthday discount together.
-- Free delivery remains fully platform-funded. Coupon and birthday funding is superseded by Phase 46: admin sets merchant contribution percentages (default 0%, optional merchant overrides) and the platform funds the remainder.
-- Merchant-created offers, flash sales, and eligible points/cashback redemption remain merchant-funded under their existing rules.
-- Driver daily invoice settlement is mandatory: HQ cash write-off by admin, wallet, or InstaPay with receipt upload.
-- Admin dashboard is desktop-first and complex: RBAC, section permissions, staff traffic/presence, finance controls, merchant operations console, and audit logs.
-- Merchant surface is production-bound; customer/driver web surfaces are testing/integration packs unless real frontend source is added.
-
-## Phase 42 Addendum — Privacy Shortcut, Driver DND, and Delivery Handoff Rules
-
-### Merchant customer-phone privacy reminder
-
-When a merchant confirms/accepts an order, the backend response must include a `customerPhonePrivacy` reminder object. The merchant UI must surface it as a reminder and shortcut near the accept-confirm action, pointing to the existing customer-number hiding/privacy button. This must not expose a raw customer phone number when the customer phone visibility policy says it is hidden.
-
-### Driver notification bell / Do Not Disturb
-
-Drivers can toggle their new-order bell and Do Not Disturb preference without changing their online/active state. Do Not Disturb disables sound/ring behavior for normal driver order notifications while keeping silent cards/notifications visible. Emergency/SOS and admin-critical flows stay separate from this setting.
-
-### Delivery handoff rule: door vs building entrance
-
-Customers can confirm whether the order should be delivered to the apartment door (`door`) or handed over under/outside the building (`building_entrance`). Optional short instructions are allowed. The assigned driver must see this rule during navigation/drop-off and acknowledge it before final delivery confirmation. Admin order details should show the selected handoff rule and acknowledgement state.
-
-
-<a id="merchant-commission-grace-and-discount-cost-sharing"></a>
-
-## Phase 46 — Merchant Commission Grace, Coupon Scope, and Discount Settlement
-
-This section supersedes older platform-only coupon/birthday wording and the retired idea that flash sales should be blocked during commission grace.
-
-### Commission grace
-
-- `defaultFreeOrderThreshold` defaults to `0`.
-- Admin may set `freeOrderThresholdOverride` per merchant; null means inherit the default.
-- One eligible order means one active merchant portion that reaches delivered state.
-- First N eligible delivered portions use `0%` commission; N+1 uses the normal effective merchant commission.
-- Counting is cumulative, atomic, and idempotent per order + merchant.
-- Historical settlement snapshots are immutable. A setting change affects future deliveries only.
-- Merchant weekly invoices aggregate portion-level commission snapshots so a mid-week threshold crossing is calculated correctly.
-
-### Admin coupon merchant scope
-
-- New coupons use a percentage and one required maximum EGP cap.
-- Admin chooses `all`, `include`, or `exclude` merchant scope.
-- In multi-merchant checkout, only matching active merchant portions form the eligible coupon subtotal.
-- The cap applies once to the complete coupon discount, then the final amount is allocated proportionally with deterministic rounding.
-- A coupon matching no active cart merchant returns `COUPON_NOT_APPLICABLE_TO_ORDER_MERCHANTS` and is not consumed.
-- Repricing after rejection/timeout recalculates over remaining active eligible portions.
-
-### Funding, merchant payout, and invoices
-
-- Default merchant contribution for coupon and birthday is `0%`, with optional per-merchant overrides.
-- Free delivery remains 100% platform-funded. Product offers, flash-sale price effects, points, and referrals keep their existing ownership rules.
-- The driver pays each merchant the server-calculated payout after merchant-funded coupon/birthday shares and valid redeemed points.
-- Platform-funded coupon/birthday/free-delivery shares become explicit credits that reduce the compulsory driver daily invoice.
-- Merchant invoices remain weekly; driver invoices remain daily.
-- A merchant-funded amount deducted from pickup payout may appear as an invoice reconciliation row but must never be charged a second time.
-- Historical order, payout, and invoice snapshots remain immutable.
-
-### Flash-sale independence
-
-- Flash sales stay available during commission grace and effective `0%` commission.
-- Commission grace must not introduce a flash-sale eligibility error or block otherwise eligible flash-sale activity.
-- Existing free allowance, paid weekly plan, duration, product/account eligibility, moderation, and admin controls remain authoritative.
-- Paid flash-sale plan/usage cost stays on the merchant weekly invoice.
-
-### Admin, merchant, customer, and driver surfaces
-
-Admin needs commission defaults/overrides, contribution policies, coupon all/include/exclude merchant selection, payout/daily-credit/weekly-invoice audit, and reports. Merchant needs grace progress, exact order payout, weekly reconciliation, and flash access without a grace block. Customer needs clear coupon applicability without internal funding data. Driver needs exact server-calculated merchant payout and daily platform-credit breakdown.
-
-Full implementation handoff: `backend/docs/MERCHANT_COMMISSION_GRACE_AND_PROMOTION_COST_SHARING_HANDOFF.md`.
