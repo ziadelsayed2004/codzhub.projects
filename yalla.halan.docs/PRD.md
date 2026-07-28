@@ -1271,7 +1271,7 @@ This section supersedes older platform-only coupon/birthday wording and the reti
 ### Flash-sale independence
 
 - Flash sales stay available during commission grace and effective `0%` commission.
-- Do not create or return `FLASH_DEAL_COMMISSION_GRACE_ACTIVE`.
+- Commission grace must not introduce a flash-sale eligibility error or block otherwise eligible flash-sale activity.
 - Existing free allowance, paid weekly plan, duration, product/account eligibility, moderation, and admin controls remain authoritative.
 - Paid flash-sale plan/usage cost stays on the merchant weekly invoice.
 
