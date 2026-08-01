@@ -4,20 +4,22 @@
 
 | Field | Value |
 |---|---|
-| Status | Current Product Scope |
+| Status | Current approved product scope; implementation of the August 2026 additions is open |
 | Audience | Client, Product Owner, UI/UX, Mobile, Web, Backend, QA |
 | Language | Simple English |
 | Delivery Package | Customer App, Merchant App, Driver App, Admin Dashboard, Merchant Dashboard |
 | Testing Surfaces | Customer Web, Driver Web |
+| Version | 2 August 2026 canonical scope update |
+| New Additions Status | Approved for implementation planning; not runtime-complete until backed by source, tests, and live evidence |
 
-Yalla Halan is a local marketplace and delivery platform. Customers can order from one merchant or several merchants in the same checkout, up to the admin-configured limit. Each merchant prepares only its own portion. Approved drivers collect the active portions and deliver the order to the customer. Admins control marketplace rules, approvals, pricing, commissions, invoices, promotions, cashback points, reports, safety, and support.
+Yalla Halan is a local marketplace and delivery platform. Customers can order from one merchant or several merchants in the same checkout, up to the admin-configured limit. Each merchant prepares only its own portion. Approved drivers collect the active portions and deliver the order to the customer. Admins control marketplace rules, approvals, pricing, commissions, invoices, promotions, cashback points, reports, safety, and support. The approved additions are an OpenAI API-powered support assistant grounded in approved knowledge, a lifetime-experience Top 10 leaderboard with controlled Facebook and Instagram activity rewards, and separate driver emergency call choices for Yalla Halan and ambulance services. The wheel-of-fortune feature is excluded by the owner's religious decision.
 
 This PRD is split into two clear parts:
 
 - **Part 1 - Product PRD:** product behavior in simple language for the client, UI/UX, and app teams.
 - **Part 2 - Operational / Integration PRD:** deeper rules for backend, dashboards, QA, and integration teams without turning the PRD into code documentation.
 
-The structure below is the original two-part PRD structure. Final decisions are merged into their proper sections; there are no phase updates, amendments, or repeated feature versions. A requirement in this PRD describes the final product target and does not, by itself, prove that its runtime or frontend already exists.
+`PRD.md` and `PRD_AR.md` are the synchronized canonical product truth. This update preserves the two-part structure and all 31 numbered sections while merging the approved additions into their proper sections. A requirement here defines approved implementation scope and does not, by itself, prove that its runtime or frontend already exists.
 
 ## Table of Contents
 
@@ -36,6 +38,7 @@ The structure below is the original two-part PRD structure. Final decisions are 
   - [12. Products, Categories, and Offers](#12-products-categories-and-offers)
   - [13. Promotions, Coupons, and Cashback Points](#13-promotions-coupons-and-cashback-points)
     - [Customer Referral Points](#customer-referral-points)
+    - [Experience Points, Leaderboard, and Social Activity Rewards](#experience-points-leaderboard-and-social-share-reward)
     - [Birthday Loyalty Discount](#birthday-loyalty-discount)
   - [14. Flash Sales](#14-flash-sales)
   - [15. Delivery Fee Meter Pricing](#15-delivery-fee-meter-pricing)
@@ -78,7 +81,7 @@ Yalla Halan connects customers, merchants, drivers, and admins in one order-deli
 
 A customer can place one checkout that includes products from multiple merchants. The order is then split into merchant portions. Each merchant sees only its own portion, accepts or rejects it, and confirms preparation timing. The system computes readiness automatically. A driver sees the order only inside the configured pre-readiness window and only if the driver is eligible by zone, account status, online state, and vehicle type.
 
-The platform also supports discounts, cashback points, birthday loyalty, customer-to-customer referral rewards, weekly order reminders, merchant weekly invoices, compulsory driver daily settlement, flash sales, settlement proof uploads, driver-customer chat, explicit chat alert buttons, SOS, notifications, merchant-product ratings/reputation, admin monitoring, Google Maps Platform location pin selection for customer and merchant locations, Google Routes API distance/duration/ETA routing, and live delivery tracking after assignment.
+The platform also supports discounts, cashback points, birthday loyalty, customer-to-customer referral rewards, weekly order reminders, merchant weekly invoices, compulsory driver daily settlement, flash sales, settlement proof uploads, driver-customer chat, explicit chat alert buttons, SOS, notifications, merchant-product ratings/reputation, admin monitoring, Google Maps Platform location pin selection for customer and merchant locations, Google Routes API distance/duration/ETA routing, and live delivery tracking after assignment. New additions provide a knowledge-grounded customer-support assistant with human handoff, a Top 10 leaderboard based on lifetime experience points that do not decrease on redemption, controlled Facebook and Instagram activity rewards with automatic-first verification, and explicit driver call choices for Yalla Halan emergency support or ambulance services.
 
 | Promise | Meaning |
 |---|---|
@@ -87,6 +90,7 @@ The platform also supports discounts, cashback points, birthday loyalty, custome
 | Readiness-based delivery | Drivers do not receive orders before the order is ready enough for pickup. |
 | Admin-controlled rules | Admin controls categories, zones, commissions, flash-sale rules, coupons, cashback redemption, referral reward settings, approvals, and invoices. |
 | Simple finance | Merchants settle weekly invoices; drivers must settle daily invoices either by cash at Yalla Halan headquarters with admin drop-off, or through Wallet/InstaPay in-app proof upload. |
+| Controlled additions | The assistant uses Admin-approved knowledge, the leaderboard shows the signed-in customer at their true rank, and emergency actions present two explicit call destinations. |
 
 [Back to top](#top)
 
@@ -96,10 +100,10 @@ The platform also supports discounts, cashback points, birthday loyalty, custome
 
 | Surface | Delivered to Client? | Purpose |
 |---|---:|---|
-| Customer Mobile App | Yes | Customer ordering, checkout, cashback points balance/history, order status, weekly order reminders, chat, support. |
+| Customer Mobile App | Yes | Customer ordering, checkout, cashback balance/history, lifetime experience points, leaderboard and allowed profiles, social activity/link/verification status, order status, weekly orders, chat, and the support assistant. |
 | Merchant Mobile App | Yes | Merchant onboarding, orders, products, categories, offers, flash sales, invoices, dashboard, and notifications. |
-| Driver Mobile App | Yes | Driver onboarding, eligible orders, pickup/drop-off steps, invoice reminders, dashboard, and driver-customer chat with explicit Alert/Ring action. |
-| Admin Web Dashboard | Yes | Platform operations, approvals, categories, zones, commissions, flash-sale rules, coupons, cashback rules, invoices, reports, support. |
+| Driver Mobile App | Yes | Driver onboarding, eligible orders, pickup/drop-off steps, invoice reminders, dashboard, driver-customer chat, and separate Yalla Halan/ambulance emergency call actions. |
+| Admin Web Dashboard | Yes | Platform operations, approvals, categories, zones, finance, promotions, knowledge-base management, per-activity social reward controls and exception review, provider-capability status, emergency-phone settings, reports, and support. |
 | Merchant Web Dashboard | Yes | Merchant operations and dashboard from web/tablet/desktop. |
 | Customer Web | Testing / integration only | Used for QA and API integration checks, not a main client delivery surface. |
 | Driver Web | Testing / integration only | Used for QA and API integration checks, not a main client delivery surface. |
@@ -114,9 +118,9 @@ This table defines the required final delivery package. The current repository c
 
 | Role | Goal | Main Actions |
 |---|---|---|
-| Customer | Order easily and save money | Register, verify by custom WhatsApp or customer-only WhySMS SMS OTP when available, save addresses, browse, add item notes, checkout, use coupons, redeem cashback points, use birthday discount when eligible, share a referral code, enter an optional referral code during new registration, track orders live, chat with the assigned driver only, rate delivered merchant-product experience, and create weekly reminders. |
+| Customer | Order easily and save money | Register, verify by custom WhatsApp or customer-only WhySMS SMS OTP when available, save addresses, browse, checkout, use coupons, earn/redeem cashback points, retain lifetime experience points, view the leaderboard and allowed profiles, link supported social providers and view activity-reward status, use the support assistant or request a human agent, use birthday/referral/weekly-order flows, track orders, chat, and rate delivered merchant-product experience. |
 | Merchant | Sell and prepare products | Register, get approved, manage products/offers under admin-assigned categories, accept/reject orders, keep product preparation defaults, adjust prep time at acceptance, run flash sales, view invoices, upload proof. |
-| Driver | Deliver ready orders | Register, get approved, go online, view eligible sorted orders, manually accept or enable optional auto-nearest accept, navigate multi-stop routes in app, pick up, deliver, use external Google Maps fallback, view invoices. |
+| Driver | Deliver ready orders | Register, get approved, go online, view eligible sorted orders, manually accept or enable optional auto-nearest accept, navigate multi-stop routes, pick up, deliver, use external Google Maps fallback, view invoices, and explicitly call Yalla Halan emergency support or ambulance services. |
 | Admin Staff | Operate assigned sections | Use only the dashboard sections assigned by Super Admin. |
 | Super Admin | Full platform control | Create admin staff, assign sections, configure marketplace rules, and access all admin modules. |
 
@@ -214,11 +218,14 @@ flowchart LR
 | Coupons | Customer can apply admin coupons created from the Admin Dashboard. | Each coupon has a percentage, one maximum EGP cap, and merchant scope: all merchants, selected merchants only, or all merchants except selected merchants. In a multi-merchant order the coupon applies only to eligible active merchant portions. |
 | Discount funding and settlement | Server-calculated rule. | Coupon and birthday discounts are split using admin-configured merchant contribution percentages, default 0% with optional merchant overrides; the platform funds the remainder. The driver pays each merchant the server-calculated payout after merchant-funded discounts, while platform-funded shares become credits on the compulsory driver daily invoice. Free delivery stays platform-funded. Merchant offers, flash sales, and valid points redemption keep their existing merchant-funded rules. |
 | Cashback points | Customer sees cashback points balance/history and can redeem points at eligible merchants. | Points are not cash and cannot be topped up, withdrawn, or transferred. |
+| Experience points and leaderboard | Customer sees lifetime experience points, the global Top 10, and their own true rank when outside the Top 10. The customer can open Top 10 profiles and their own profile. | Redemption reduces only spendable balance, not lifetime experience points. The signed-in customer is never duplicated and is never relabeled as rank 11 unless 11 is the true rank. Public profile data is limited to approved identity fields, rank, experience points, most-ordered merchant, and most-ordered product from delivered orders. |
+| Social activity rewards | Customer can see separate eligible activities for Facebook follow, Instagram follow, Facebook campaign post, and Instagram campaign post. | Official automatic verification is the primary path. A permitted but unverifiable activity alone may request proof for exception review. A prohibited activity is disabled. Button clicks never earn points. |
 | Weekly orders | Customer can create from a delivered recent order or build a new template after clearing the cart. | Create/edit/Order Now/reminder loading always replaces the cart, remains editable, and requires explicit normal checkout confirmation. |
 | Status and live tracking | Customer sees one clear order timeline, receives notifications when a merchant portion is cancelled or timed out, and sees the assigned driver live on the order map during active delivery. | Live GPS starts only after driver assignment for active delivery, expires by TTL, and should not store unnecessary long-term raw history. Cancelled merchant notifications include a Browse Products action. |
 | Ratings after delivery | After delivery, the customer submits one 1-to-5-star merchant-product experience rating for each delivered merchant portion. | The backend distributes the portion score once to every unique purchased product under that merchant. Product averages are derived from valid distributed ratings, and merchant rating is derived from product ratings. There are no separate per-product star controls. Rejected, cancelled, timed-out, and non-delivered portions are never rating targets. |
 | Birthday gift | Customer can receive a birthday loyalty discount once per birthday date when admin settings allow it. | Birthdate is entered once during registration or first profile completion; customer cannot edit it later except through controlled admin/support correction. |
 | Chat/call | Customer can chat with the assigned driver for order chat, plus support/complaint channels. Phone visibility controls direct-call exposure. | Hidden phone keeps driver-customer chat and alert available where allowed but disables direct phone call. Driver can use an explicit Alert/Ring button that sends a separate customer chat alert with call-ring/alarm behavior. Normal customer-bound chat messages may use default high-priority customer-chat ring metadata, but must not use the explicit call-alert/alarm behavior. |
+| AI support assistant | Customer asks routine guidance/FAQ questions and can request a human support representative. | The assistant retrieves only from published Admin-approved knowledge, fails safely when no supported answer exists, and hands off with conversation context. It has no permission to modify orders, accounts, points, invoices, settlements, or roles. |
 
 [Back to top](#top)
 
@@ -271,7 +278,7 @@ Preparation-time stats must ignore cancelled/rejected/timeout-cancelled merchant
 | Acceptance | Driver can manually accept trips or optionally enable auto-nearest accept. | Auto-nearest is off by default and must use server-side assignment locking so two drivers cannot take the same trip. |
 | Pickup | Driver confirms pickup from merchant and confirms merchant payment when required. | This confirmation moves the customer-visible status line to picked up/on the way. Assigned driver may pick eligible portions first while others continue preparing. |
 | Drop-off | Driver delivers to customer and completes delivery step. | Delivery completion finalizes order-side effects. |
-| Maps and navigation | Driver sees in-app Google navigation/map view for the active multi-stop route and can still open Google Maps externally as fallback. | Route includes next ready pickup, remaining active pickups, and customer drop-off. Cancelled/rejected/timeout portions are removed from the route. The SOS/emergency button on the map screen is a platform emergency action, not the customer chat alert. |
+| Maps, navigation, and emergency | Driver sees in-app Google navigation/map view for the active multi-stop route and can still open Google Maps externally as fallback. | Route includes next ready pickup, remaining active pickups, and customer drop-off. The emergency sheet keeps the internal platform SOS action separate from explicit call choices for Yalla Halan emergency support and the ambulance destination configured for the operational zone; none uses the customer chat-alert channel. |
 | Notification bell / DND | Driver can mute ordinary driver-ring notifications. | DND does not disable SOS, mandatory safety notices, invoice enforcement, or order-state validation. |
 | Delivery handoff | Driver sees the customer choice: `door` or `building_entrance`. | The assigned driver must acknowledge and follow the selected handoff method before completion. |
 | Invoices | Driver sees compulsory daily invoice and pays it daily. | Admin controls default/custom driver commission percent and can drop/settle cash-paid invoices from the dashboard. |
@@ -295,9 +302,11 @@ Preparation-time stats must ignore cancelled/rejected/timeout-cancelled merchant
 | Flash sales | Configure free launches on/off, free launch count/duration/renewal, paid weekly plan count/duration/price, and billing rules. |
 | Coupons | Create percentage coupons with a maximum cap and choose merchant scope: all, selected only, or all except selected merchants. |
 | Cashback points | Choose eligible merchants and set point-to-money redemption value per merchant. |
+| Leaderboard and social rewards | View the Top 10 and customer ranks; configure each Facebook/Instagram activity independently; see provider capability/policy state; review only permitted manual exceptions; and audit automatic or manual awards and duplicate prevention. |
+| Support assistant | Create, edit, publish/unpublish approved FAQ/knowledge entries, enable the assistant, set usage/handoff controls, and review unanswered questions without granting the assistant operational actions. |
 | OTP channels | Configure customer-only WhySMS SMS OTP, custom WhatsApp OTP availability, cooldowns, channel switch limits, failed-attempt lockout, and abuse controls. Runtime availability and shared limits are active; admin UI controls remain a frontend/admin-surface step. |
 | Birthday loyalty | Enable/disable birthday loyalty, set max discount percent, product price cap, order subtotal cap, notification hour, and reports. |
-| Safety and alerts | Configure the Yalla Halan emergency phone, SOS enablement, chat Alert/Ring repeat duration and caps, and operational incident handling. SOS remains separate from customer chat alerts. |
+| Safety and alerts | Configure separate Yalla Halan emergency and ambulance destinations by operational zone, including enablement, display name, and validated phone number. No active call action appears without a valid enabled number. Preserve internal platform SOS and its optional last authorized location, configure chat Alert/Ring limits, and audit call-dialer attempts. Calling begins only after the driver selects and confirms a destination. |
 | Orders | Monitor all orders, cancelled merchant portions, timeout cancellations, delayed orders, and intervene operationally when needed. |
 | Support/reports | Manage complaints, support, reports, and broadcasts. |
 
@@ -485,6 +494,31 @@ Customer referral rewards let one customer invite another customer using a refer
 | Abuse prevention | No self-referral, no duplicate reward, no reward for cancelled/rejected/test/non-delivered orders. |
 | Points model | Referral rewards use the existing points ledger with source metadata; they are not cash, not transferable money, and not a wallet top-up. |
 | Reports | Admin can review referral links, first-delivered-order trigger status, points awarded, and suspicious/duplicate attempts. |
+
+[Back to top](#top)
+
+<a id="experience-points-leaderboard-and-social-share-reward"></a>
+
+### Experience Points, Leaderboard, and Social Activity Rewards
+
+The existing redemption system remains unchanged. The platform keeps spendable points and a separate lifetime experience-point value used for ranking.
+
+| Rule | Requirement |
+|---|---|
+| Unified earning | Each qualified purchase, referral, or verified/approved social-activity earn event credits spendable points and lifetime experience points. |
+| Redemption | Spending points reduces spendable balance only; it does not reduce lifetime experience points. |
+| Invalid earning reversal | Fraud, cancellation, or an erroneous earn event may reverse both values through an auditable source-linked correction. This is not normal redemption. |
+| Global Top 10 | Rank customers by qualified lifetime experience points. |
+| Signed-in customer | If outside the Top 10, show the customer after the list with their true platform rank. If inside, do not duplicate the row. |
+| Stable ties | Break ties by the timestamp at which the score was reached, then a stable account identifier. |
+| Profile access | From this list, customers can open Top 10 profiles and their own profile only. |
+| Profile content | Show approved public identity fields, current rank, experience points, most-ordered merchant, and most-ordered product based only on completed delivered orders. |
+| Separate activities | Facebook follow, Instagram follow, Facebook campaign post, and Instagram campaign post are four independent activity types. Each has its own enablement, point value, campaign dates, cooldown, and per-account/day/month limits. |
+| Automatic-first verification | Award automatically only after an official provider API or webhook returns evidence that identifies the customer, activity, campaign, and unique occurrence. Pressing a Follow or Share button is never proof. |
+| Manual fallback | If an activity is permitted by the provider but official automation cannot verify it, only that activity may use an auditable proof/link review queue. Automatically verifiable activities do not create Admin review work. |
+| Policy gate | If provider policy prohibits rewarding an activity, that activity stays disabled. No scraping, browser automation, password collection, or fabricated verification is allowed. |
+| Reward controls | Admin controls each activity independently. Unique source keys prevent duplicate awards for the same account, provider occurrence, post/proof, campaign, or reward cycle. |
+| Privacy | Never expose phone numbers, addresses, detailed order history, or customer-to-customer relationships. |
 
 [Back to top](#top)
 
@@ -687,14 +721,17 @@ The Merchant App must support printing a professional receipt for each merchant 
 | Chat | Active order chat is between the assigned driver and customer. Support and complaint threads remain separate from order chat. |
 | Unread counters | Users should see unread chat badges/counts. |
 | Chat alert button | Driver can press an explicit Alert/Ring button inside customer-driver order chat to send a customer chat alert with call-ring/alarm sound where available. Normal chat pushes to the customer keep `customer_chat_ring` metadata only and must not use `customer_chat_call_alert`. |
-| SOS / emergency | The driver map SOS button alerts the platform and starts a phone call to the admin-configured Yalla Halan emergency number. | 
+| SOS / emergency | The driver emergency sheet exposes an internal platform SOS action and separate call choices for the enabled, validated Yalla Halan and zone-appropriate ambulance destinations. A call begins only after explicit selection and confirmation and only opens the device dialer. |
 | Calls | Direct call is available only when customer phone visibility allows it. |
 | Notifications | Used for account approval, orders, chat, invoices, weekly reminders, and support. |
 | Support | Customers, merchants, and drivers can contact support or submit complaints where supported. |
+| AI support and human handoff | The OpenAI API-powered assistant retrieves only from published Admin-approved FAQ/knowledge content, identifies the supporting source where possible, fails safely when knowledge is absent, and hands off to a support representative with conversation context. It cannot modify orders, accounts, points, invoices, settlements, or permissions. |
+
+The assistant integration is server-side only. OpenAI credentials stay in the deployment secret store and never enter apps, Postman examples, logs, or the repository. Published knowledge has a versioned ingestion/index status; draft or failed-ingestion content cannot ground customer answers. The provider/model and limits are configuration, not client truth. Prompts and telemetry minimize personal data, enforce rate/cost limits, redact sensitive values, and preserve an auditable handoff summary. OpenAI API usage is an operating cost separate from development.
 
 Chat alert rule: the driver Alert/Ring action is not a voice call and does not open a voice channel. It creates a visible chat alert/system event for the customer and plays a call-ring/alarm sound when available. The customer cannot reply to the alert object itself, but can open the customer-driver chat and respond normally. Repetition is controlled by admin dashboard safety settings: `chatAlertRepeatSeconds` defines when the button becomes available again, with per-driver/per-order caps and terminal-state blocking. It must not be blocked merely because a previous alert is still unacknowledged.
 
-SOS is a separate safety action on the navigation map. It must never reuse the customer chat-alert channel or its cooldown semantics.
+Internal platform SOS is separate from a phone call and from the customer chat-alert channel/cooldown. SOS may attach the driver's last authorized location to the internal alert. Each dialer-open attempt records destination type, configured phone snapshot, driver, related order when present, time, and success/failure to open the dialer; it never records call audio or content. A dialer failure does not cancel an SOS already raised, and DND never hides or blocks emergency actions.
 
 [Back to top](#top)
 
@@ -712,9 +749,13 @@ SOS is a separate safety action on the navigation map. It must never reuse the c
 | Flash sales | Free launches on/off, free count/duration/renewal, paid weekly plan count/duration/price, and weekly invoice billing are clear. |
 | Coupons | Percentage, one maximum cap, and all/include/exclude merchant scope are clear. |
 | Cashback/referrals | Points are not cash; cashback and referral earning/redemption rules are clear. Referral inviter reward waits for invited customer first delivered order. |
+| Experience and leaderboard | Spendable balance and lifetime experience are separate; redemption does not reduce experience; Top 10, signed-in true rank, profile access, and delivered-order statistics are correct. |
+| Social activity rewards | Four independent activity types, automatic official verification first, manual exception only when permitted and necessary, provider-policy disablement, configurable points/limits, and idempotent duplicate prevention are clear. |
+| Support assistant | Published knowledge only, safe failure, human handoff, tenant privacy, and no operational action permissions. |
 | Ratings | One merchant-product experience score per delivered merchant portion is distributed to unique purchased products; there is no separate per-product input. |
 | Privacy and handoff | Hidden customer phone, audited disclosure, driver DND boundaries, and door/building-entrance choice are clear. |
-| Safety | Driver-map SOS is separate from the customer chat Alert/Ring and uses the admin-configured emergency number. |
+| Safety | Internal SOS, customer chat Alert/Ring, and phone calls are separate; zone-aware Yalla Halan/ambulance destinations require valid Admin configuration, explicit confirmation, DND bypass, and auditable dialer attempts without call content. |
+| Wheel of fortune exclusion | No wheel screen, API, Admin setting, reward, seed, or test data exists. |
 | Admin | Super Admin creates staff and assigns sections. |
 | Evidence | A target surface is not marked complete unless executable source and verification evidence exist. |
 
@@ -741,11 +782,13 @@ This part gives implementation teams enough detail to build and test correctly.
 | Orders | Draft, checkout, merchant portions, preparation, driver assignment, delivery, status projections. |
 | Finance | Commissions, weekly invoices, flash-sale costs, receipts/proofs, overdue handling. |
 | Promotions | Coupons, eligible free-delivery promotions, flash sales, product offers. |
-| Cashback points | Points balance/history, redemption preview, reserve/commit/restore/reverse. |
+| Cashback and experience points | Spendable balance/history, redemption preview, reserve/commit/restore/reverse, plus lifetime experience that does not decrease on redemption. |
+| Leaderboard and verified sharing | Top 10, signed-in true rank, allowed profiles, most-ordered merchant/product statistics, and verified share claims. |
 | Weekly orders | Named templates, scheduled reminders, confirm/dismiss suggestions. |
 | Chat/notifications | Assigned driver-customer order chat, unread counters, push/inbox notifications, and separate Alert/Ring behavior. |
-| Safety and privacy | Driver-map SOS, emergency phone, customer phone visibility, DND boundaries, and delivery handoff preference. |
-| Integrations and media | WhySMS, WhatsApp OTP, Firebase, Google Maps/Routes, and protected Hostinger-hosted media. |
+| Safety and privacy | Driver-map SOS, separate Yalla Halan/ambulance phones, customer phone visibility, DND boundaries, and delivery handoff preference. |
+| AI customer support | Approved FAQ/knowledge, grounded retrieval, rate limits, safe failure, unanswered-question reporting, and human handoff without operational tools. |
+| Integrations and media | OpenAI API, WhySMS, WhatsApp OTP, Firebase, Google Maps/Routes, and protected Hostinger-hosted media. |
 | Admin operations | Monitoring, approvals, permissions, rules, reports, support. |
 
 [Back to top](#top)
@@ -756,13 +799,15 @@ This part gives implementation teams enough detail to build and test correctly.
 
 | User Type | Access Model |
 |---|---|
-| Customer | Own profile, own addresses, own orders, own chat, own cashback points. |
+| Customer | Own profile, addresses, orders, chat, points/rank/share requests, the global Top 10, and limited public profiles of Top 10 customers. |
 | Merchant | Own store, own categories, own products, own order portions, own invoices. |
 | Driver | Own profile, eligible orders, assigned order steps, own invoices. |
 | Admin Staff | Only assigned dashboard sections. |
 | Super Admin | All dashboard sections and staff management. |
 
 Admin dashboard action/data-scope labels are descriptive metadata for dashboard rendering. Backend authorization remains section-based through `allowedSections[]`; Super Admin access is implicit for all sections.
+
+Knowledge publishing, social reward configuration, provider-capability review, permitted manual exceptions, and emergency-number management require explicit Admin sections/permissions and audit events. Support staff receive only the minimum converted conversation context needed to assist the customer. The AI assistant itself receives no operational permission.
 
 [Back to top](#top)
 
@@ -913,10 +958,11 @@ Required configurable flash-sale fields:
 
 ```mermaid
 flowchart TD
-    A[Customer pays merchandise subtotal] --> B[Earn points]
-    C[Admin enables merchant redemption] --> D[Customer redeems points]
-    D --> E[Discount in checkout]
-    E --> F[Ledger records movement]
+    A[Qualified earn event] --> B[Spendable balance]
+    A --> C[Lifetime experience]
+    B --> D[Eligible merchant discount]
+    D --> E[Reduce spendable only]
+    C --> F[Top 10 and customer rank]
 ```
 
 | Rule | Requirement |
@@ -926,6 +972,12 @@ flowchart TD
 | Redemption eligibility | Admin decides which merchants accept points. |
 | Redemption value | Admin sets how many EGP discount a point bundle gives per merchant. |
 | Ledger | Every earn/redeem/restore/reverse action is auditable. |
+| Atomic earning | Each qualified earn updates spendable and experience values once with a unique source key. |
+| Redemption invariant | Reserve/commit redemption reduces spendable balance only and never reduces lifetime experience. |
+| Invalid earn reversal | A source-linked cancellation, fraud finding, or correction can reverse both values; this is distinct from redemption. |
+| Leaderboard | Top 10 uses qualified lifetime experience and appends the signed-in customer at the true rank when outside the Top 10 without duplication. |
+| Profile statistics | Most-ordered merchant and product use completed delivered order lines only, with deterministic tie-breaking. |
+| Social activity awards | No reward is recorded before official verification or an allowed manual approval. A unique source key prevents duplicate account/provider-occurrence/post/proof/campaign/cycle awards. |
 | Cash behavior | Points are not money and cannot be topped up, withdrawn, or transferred. |
 
 [Back to top](#top)
@@ -991,6 +1043,9 @@ Rules:
 | Referral registration | Customer registration accepts optional `referralCode`; it links the invited customer but does not immediately grant inviter reward. |
 | Reward lifecycle | Inviter and invitee points are granted after the invited customer completes the first real delivered order. Reward grants are idempotent. |
 | Ledger | Referral rewards are points ledger entries with source metadata; they do not create stored money. |
+| Experience projection | Qualified purchase, referral, and verified/approved social activity earns update spendable points and experience; redemption reduces spendable points only. |
+| Social verification | Facebook follow, Instagram follow, Facebook campaign post, and Instagram campaign post are separate. Official API/webhook evidence is primary; permitted unverifiable activity may use proof review; prohibited activity is disabled. |
+| Social-abuse prevention | Admin controls each activity's points, campaign dates, cooldown, account/day/month limits, and enablement; unique keys prevent duplicate provider occurrences, proofs, posts, campaigns, or cycles. |
 | Chat alert | Only the driver can send an explicit Alert/Ring inside driver-customer order chat. It is a chat/system alert plus call-ring/alarm push, not a voice call. Merchant chat alerts are retired. |
 | Normal messages | Normal driver-customer messages to the customer can carry `attentionMode=ring`, `notificationBehavior=customer_chat_ring`, `sound=default`, and `priority=high`; they must not use `customer_chat_call_alert` or the alert/alarm sound. Only explicit driver Alert/Ring uses the call-alert/alarm channel. |
 | Cooldowns | Admin dashboard owns alert repetition settings. `chatAlertRepeatSeconds` controls the UI copy such as "Available every 3 minutes" / "Available after 1 minute". Per-driver/per-order caps and terminal-order rejection still apply. |
@@ -1010,13 +1065,15 @@ Exact endpoints belong in backend API docs and Postman. This PRD defines behavio
 | Merchant categories | List assigned categories only, hide merchant add/edit/remove controls, and validate product binding to admin-assigned categories. |
 | Finance | Commission defaults/overrides, invoices, proof upload, flash-sale costs. |
 | Promotions | Coupons, flash sales, product offers, and eligible free-delivery subsidy. |
-| Cashback | Points balance/history, redemption preview, commit/restore/reverse. |
+| Cashback, experience, and leaderboard | Spendable balance/history, redemption preview, commit/restore/reverse, lifetime experience, Top 10, signed-in true rank, redemption not reducing experience, allowed profiles/statistics, and idempotent policy-gated social activity rewards. |
 | Weekly orders | Create from recent order or new builder, full cart replacement, snapshot save/edit/toggle/delete, Order Now, reminder materialization, unavailable-item handling, explicit checkout confirmation. |
 | Google Maps / Routes | Customer/merchant pin flows, Google Maps helpers, Google Routes distance/ETA/delivery fee snapshots, multi-stop route updates. |
 | Driver navigation | Manual accept, optional auto-nearest accept, assignment locking, active multi-stop route projection, in-app Google navigation, external Google Maps fallback. |
 | Birthday loyalty | Birthdate immutability, admin settings, checkout pricing, popup seen state, birthday notification, and admin reports. |
 | Chat/notifications | Threads, unread counters, push/inbox records. |
-| Safety/privacy/handoff | SOS versus chat Alert/Ring separation, admin emergency phone and repeat settings, driver DND boundaries, hidden customer phone, and `door`/`building_entrance` acknowledgement. |
+| AI support assistant | Knowledge publish lifecycle, grounded responses, source identification where possible, safe failure, rate limits, tenant privacy, unanswered-question reporting, and human handoff without assistant actions. |
+| Safety/privacy/handoff | Internal SOS versus chat Alert/Ring versus phone-call separation; zone-aware Admin-managed Yalla Halan/ambulance destinations; invalid-number hiding; explicit call selection/confirmation; dialer-attempt audit without call content; internal alert survival when the dialer fails; optional last authorized SOS location; driver DND boundaries; hidden customer phone; and `door`/`building_entrance` acknowledgement. |
+| Exclusions | Prove there is no wheel-of-fortune route, screen, setting, reward, seed, or fixture. |
 | Authorization/security | Authentication, current account status, role/permission checks, tenant/ownership/assignment isolation, rate limits, upload content validation, private media, OTP purpose/atomicity, Socket parity, and negative tests. |
 | Production | Hostinger deployment, MongoDB Replica Set, HTTPS/CORS/proxy, providers, backup/restore, monitoring, real frontend builds, and live E2E evidence. |
 
@@ -1037,14 +1094,13 @@ Verification should include install, build, lint, tests, seeded live smoke, and 
 | Tips | Unresolved UI-only signal | Do not treat as active billing truth unless later accepted. |
 | Fragile/perishable flags | Unresolved UI-only signal | Do not treat as active backend truth unless later accepted. |
 | Countdown TTL on driver card | Unresolved UI-only signal | Do not treat as active backend truth unless later accepted. |
-| Limited points leaderboard and verified social-share reward | Approved change proposal, not commissioned runtime | The accepted shape is global Top 10 by lifetime qualified points plus the signed-in customer's own rank when outside Top 10. A Facebook/Instagram share claim uses a generated card, uploaded proof/link, explicit Yalla Halan page mention, Admin review, configurable points, cooldown, and once-only anti-duplicate award. It creates no customer-to-customer graph. It becomes active product truth only after written commercial approval and implementation. |
-| Read-only AI FAQ assistant | Feasible paid add-on, not commissioned runtime | It may answer only from an Admin-approved FAQ/knowledge base, cite or identify its source, fail closed when the answer is absent, and escalate to support. It may not modify orders, balances, accounts, settlements, or permissions. Provider usage is an operating cost outside development pricing. |
 | Full customer social graph | Rejected from the current product | Friends/follows, customer-to-customer messaging, activity feeds, public profiles, and social notifications create a separate moderation/privacy/abuse and high fan-out traffic domain. They must not be mixed into the marketplace runtime. |
-| Custom characters and full Yalla Identity gamification | Out of scope | Avatars, XP, levels, ranks, achievements, challenges, mystery boxes, daily wheel, seasons, cosmetic inventory, and character creation require a separate content/economy service and cross-client asset pipeline. They are not implied by the existing cashback-points module. |
+| Custom characters and full Yalla Identity gamification | Out of scope | Limited lifetime experience points for the leaderboard are in scope. Avatars, levels, tiers, achievements, challenges, mystery boxes, seasons, cosmetic inventory, and character creation remain a separate content/economy product. |
+| Wheel of fortune | Rejected; do not implement | There is no technical blocker, but the owner excludes the feature for religious reasons related to chance, gharar, and maysir. No screen, API, Admin setting, reward, seed, or fixture may be created. |
 | Driver level and dispatch-priority system | Rejected as designed | Bronze/Silver/Gold/Platinum/Ambassador priority would conflict with nearest/eligible dispatch, depends on a driver-rating contract that is not active, and can starve lower-tier drivers. Operational KPI reporting may be proposed separately without changing dispatch priority. |
-| Time-based smart campaign engine | Out of scope | Existing coupons, flash sales, offers, banners, and notifications remain the current truth. Dynamic segmentation, seasonal themes, wheels/challenges, unlimited campaign rules, and cross-vertical orchestration are a separate campaign product. |
+| Time-based smart campaign engine | Out of scope | Existing coupons, flash sales, offers, banners, and notifications remain the current truth. Dynamic segmentation, seasonal themes, challenges, unlimited campaign rules, and cross-vertical orchestration are a separate campaign product. |
 | Yalla Pharmacy vertical | Rejected pending separate discovery and legal approval | Prescription handling, medical review, emergency priority, drug catalog rules, and local regulatory compliance are a separate regulated vertical and cannot be inferred from generic merchant/category support. |
-| Expanded emergency operations case management | Partially in scope | Core driver SOS, Admin emergency phone, platform alert, and phone-call action are active. Customer-no-response cases, incident workflow, replacement-driver orchestration, compensation automation, and an emergency operations console are a separate paid expansion. AI anomaly detection is not active. |
+| Expanded emergency operations case management | Dual calling in scope; case management out of scope | Platform SOS plus explicit Yalla Halan emergency/ambulance call choices are in scope. Customer-no-response cases, incident workflow, replacement-driver orchestration, compensation automation, emergency operations console, and AI anomaly detection remain outside this addition. |
 | Owner Admin Dashboard wishlist beyond the canonical modules | Out of scope | The current Admin scope is defined in Sections 9, 20, and 21. Gamification control, pharmacy control, AI prediction, universal content/theme editing, arbitrary feature flags, wallet management, and microservice control are not included in the base dashboard. |
 | Mandatory Redis/CDN/event-driven/microservice/read-replica redesign | Not required for the current release | The current modular monolith may add measured caching or infrastructure only after profiling and capacity evidence. Architecture is not expanded merely to satisfy a technology checklist. |
 | Full live endpoint-matrix execution | External release evidence gate | The runner and coverage registry exist. A passing claim requires an isolated transaction-capable MongoDB Replica Set, synthetic credentials, a live API listener, and explicit destructive-test acknowledgement. Missing infrastructure is recorded as blocked evidence, not an open code task and not a pass. |
