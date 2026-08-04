@@ -4,15 +4,15 @@
 
 | Field | Value |
 |---|---|
-| Status | Current approved product scope; Phase 48 backend is locally implemented, while Tasks & Rewards and all frontend/live gates remain open |
+| Status | Current approved product scope; Phase 48 backend and Phase 49 Tasks & Rewards runtime are locally implemented, and Phase 50 Merchant availability domain, Merchant-owner/Admin APIs, central catalog/order/weekly enforcement, and active Postman/security assurance are implemented through `backend_293`; frontend and live gates remain open |
 | Audience | Client, Product Owner, UI/UX, Mobile, Web, Backend, QA |
 | Language | Simple English |
 | Delivery Package | Customer App, Merchant App, Driver App, Admin Dashboard, Merchant Dashboard |
 | Testing Surfaces | Customer Web, Driver Web |
-| Version | 3 August 2026 canonical truth sync |
-| New Additions Status | AI/XP-social/emergency backend is locally implemented; Tasks & Rewards is approved/planned at USD 350; frontend and live-provider/deployment evidence remain open |
+| Version | 4 August 2026 supplied-UI, backend, and Postman contract sync |
+| New Additions Status | AI/XP-social/emergency backend and Tasks & Rewards authoring/progress/voucher/checkout runtime plus eleven-route security/Postman closure are locally implemented; bounded non-production capacity harness wiring is complete through `backend_287`; Merchant weekly hours/Open/Closed/Busy, Admin availability runtime, central catalog/order/weekly enforcement, and eight-route Phase 50 Postman/security closure are implemented through `backend_293`; representative capacity evidence, frontend, and live-provider/deployment evidence remain open |
 
-Yalla Halan is a local marketplace and delivery platform. Customers can order from one merchant or several merchants in the same checkout, up to the admin-configured limit. Each merchant prepares only its own portion. Approved drivers collect the active portions and deliver the order to the customer. Admins control marketplace rules, approvals, pricing, commissions, invoices, promotions, cashback points, reports, safety, and support. Approved additions cover an OpenAI API-powered support assistant grounded in approved knowledge, a lifetime-experience Top 10 leaderboard with controlled Facebook and Instagram activity rewards, separate driver emergency call choices for Yalla Halan and ambulance services, and a USD 350 Tasks & Rewards screen where Admin creates measurable targets and customers earn a personal free-delivery or capped percentage-discount code. The wheel-of-fortune feature is excluded by the owner's religious decision.
+Yalla Halan is a local marketplace and delivery platform. Customers can order from one merchant or several merchants in the same checkout, up to the admin-configured limit. Each merchant prepares only its own portion. Approved drivers collect the active portions and deliver the order to the customer. Admins control marketplace rules, approvals, pricing, commissions, invoices, promotions, cashback points, reports, safety, and support. Approved additions cover an OpenAI API-powered support assistant grounded in approved knowledge, a lifetime-experience Top 10 leaderboard with controlled Facebook and Instagram activity rewards, separate driver emergency call choices for Yalla Halan and ambulance services, and a USD 350 Tasks & Rewards screen where Admin creates measurable targets and customers earn a personal free-delivery or capped percentage-discount code. The approved Phase 50 amendment adds one Merchant opening time and one closing time applied to the whole week, explicit Open/Closed/Busy state, temporary Busy durations in 30-minute increments, customer-safe next-open messaging, and audited Admin control. The wheel-of-fortune feature is excluded by the owner's religious decision.
 
 This PRD is split into two clear parts:
 
@@ -26,6 +26,7 @@ This PRD is split into two clear parts:
 - [Part 1 - Product PRD](#part-1-product-prd)
   - [1. Product Summary](#1-product-summary)
   - [2. Delivery Package](#2-delivery-package)
+  - [Supplied Merchant and Delivery UI Contract](#supplied-merchant-and-delivery-ui-contract)
   - [3. User Roles](#3-user-roles)
   - [4. Registration and Approval](#4-registration-and-approval)
   - [5. Full Marketplace Flow](#5-full-marketplace-flow)
@@ -110,6 +111,34 @@ The platform also supports discounts, cashback points, birthday loyalty, custome
 | Driver Web | Testing / integration only | Used for QA and API integration checks, not a main client delivery surface. |
 
 This table defines the required final delivery package. The current repository contains backend source and UI reference files, but no production frontend source; a PDF, Postman collection, or Agent Pack entry is not executable frontend evidence.
+
+[Back to top](#top)
+
+<a id="supplied-merchant-and-delivery-ui-contract"></a>
+
+## Supplied Merchant and Delivery UI Contract
+
+The merged `MerchantApp.pdf` and `DeliveryApp.pdf` files are the approved screen-order evidence for the Merchant and Delivery apps. English and Arabic mirrors represent the same flow. The UI defines the visible sequence and wording; active backend validation schemas define executable request fields, status transitions, authorization, and error behavior. Merchant Business Hours follows screen 104 exactly: one Start Time and one End Time, applied to every day of the week in `Africa/Cairo`. The app never submits per-day rows or an availability concurrency version.
+
+| Surface | Supplied screen order | Executable backend/Postman contract |
+|---|---|---|
+| Merchant onboarding/session | 01–06 registration, WhatsApp OTP, documents, pending review; 07–11 login, password reset, blocked state | Shared Auth collection: OTP channels/send/verify, OTP-bound preregistration uploads, Merchant registration, login/reset/refresh/logout. Pending/blocked are response-driven UI states, not separate mutation endpoints. |
+| Merchant orders | 12–17 New/Preparing/History, large-order prep adjustment, offline and suspended states | Incoming/history, accept/reject, receipt, account state, and explicit availability. Preparation is finalized at acceptance; retired prep/start/ready actions must not be shown. |
+| Merchant catalog | 18–29 products, options, sizes, offers, edit/toggle/delete | Merchant product CRUD, stock toggle, bulk toggle, assigned categories, upload, and backend-valid size/offer payloads. |
+| Merchant analysis/promotions | 30–32 product KPIs; 33–36 flash-sale list/subscription/create/time | Product KPI and flash-deal routes. Subscription/payment eligibility remains server-authoritative. |
+| Merchant dashboard/settings | 37–40 dashboard/rating/preparation/orders metrics; 41 notifications; 42 settings; 43 help; 44 privacy | Merchant KPIs, notifications, profile/category reads, support threads/messages, and static legal content. No API is fabricated for static Privacy content. |
+| Merchant finance | 45–47 invoice, receipt upload, payment submitted | Merchant invoice list, payment instructions, private upload, and invoice receipt submission. |
+| Merchant availability additions | 96–103 Open/Busy/Closed dialogs; 104–105 Business Hours | `GET /merchant/availability`, idempotent `PUT /merchant/availability/state`, and `PUT /merchant/availability/schedule` with `{ opensAt, closesAt }`. Saving enables the hours for the whole week. Busy is 30–720 minutes in 30-minute increments. The app sends no availability version. The binary `PATCH /merchant/toggle-active` is compatibility-only and must not drive these screens. |
+| Delivery onboarding/session | 01–06 registration, WhatsApp OTP, vehicle/personal verification, pending review; 07–11 login, reset, blocked state | Shared Auth collection: driver OTP, staged private documents, registration, login/reset/refresh/logout. Pending/blocked are response-driven UI states. |
+| Delivery work/order flow | 12–13 available orders/work preferences; 14–16 navigation, merchant payout, pickup, customer cash, delivery | Driver dashboard/available orders, accept/reject, online/active state, zone and auto-nearest preference, route/handoff/location/step APIs, and exact merchant-payout confirmation. |
+| Delivery communication/state | 17–19 customer chat/alert/cooldown; 20–21 offline/suspended; 22 notifications | Order chat, alert availability/send/acknowledge/dismiss, driver state, and notification list/read actions. |
+| Delivery settings/support | 23 settings; 24 edit profile/zone; 25 support | Driver profile, working zone, notification preferences, and owned support threads/messages. |
+| Delivery dashboard/finance | 26 dashboard; 27 rating information; 28 orders; 29 earnings; 30–32 invoice payment | Driver dashboard/history, invoice list, payment instructions, private receipt upload, and submission. Screen 27 is informational; there is no driver rating-submission action. |
+| Delivery legal/help | 33 help center; 34 privacy | Support actions use the support contract; Privacy is static content with no fabricated API. |
+
+Known open contract gap: supplied Delivery screens 04–05 show front/back National ID, driving-licence and vehicle-registration files, front/side selfies, and a maximum of three vehicle photos. The current backend accepts one `nationalIdFile`, one `selfieFile`, optional single `drivingLicenseFile`/`vehicleRegistrationFile`, and `vehiclePhotoFiles` with no maximum. Active Postman must continue to show that current runtime truth until `backend_294_driver_verification_document_ui_parity` implements and migrates the side-specific contract.
+
+Any supplied screen without production frontend source remains an implementation/UAT task. Any visible action without an active backend contract must become a new Agent Pack step before implementation; it must not be hidden behind a dummy Postman request or a hardcoded frontend response.
 
 [Back to top](#top)
 
@@ -239,7 +268,7 @@ flowchart LR
 |---|---|---|
 | Account state | Merchant is pending until admin approval. | Pending or suspended merchants cannot receive normal orders. |
 | Business location | Merchant selects one Google Maps business pin during onboarding. | The pinned location is locked after approval unless admin reopens it; backend keeps lat/lng, address text, label, place metadata when available, and Google Maps helpers. |
-| Availability | Merchant can be Open or unavailable. | UI may say “Close or Busy”; the business state is accepting/not accepting orders. |
+| Availability | Merchant selects Open, Closed, or temporary Busy and manages one Start Time and one End Time for the whole week from Settings. Busy starts at 30 minutes and uses 30-minute increments. | The server derives the effective state in `Africa/Cairo`; account/Admin closure, active Busy, manual Closed, or being outside enabled hours prevents every new-order preview/create/materialization path. Existing accepted orders continue. State writes are idempotent and client-version-free. |
 | Orders | Merchant sees new orders and accepted/preparing history. | Merchant sees only its own order portion. |
 | Accept/reject | Merchant accepts or rejects its portion. | Rejection requires a reason and cancels only that merchant portion; the remaining order is repriced and continues when active portions remain. |
 | Preparation | Merchant product records include default preparation time. On acceptance the merchant can adjust preparation time using repeated +/- 5 minute controls and choose normal vs large-capacity eligibility. | The system computes readiness and driver visibility. The platform records preparation duration so fastest, slowest, and average preparation-time metrics can be shown. |
@@ -251,6 +280,18 @@ flowchart LR
 | Dashboard | Merchant sees sales, commission, order, rating, product performance, and preparation-time metrics. | Metrics should separate revenue from amounts due to platform and show fastest/slowest/average preparation time plus sample count when available. |
 | Ratings and reputation | Merchant rating is not an independent manual score. It is derived from ratings received by the merchant's products/merchant portions. | Product ratings are averaged per product, then merchant rating is recomputed from all product-rating documents or product averages weighted by rating count. This keeps the merchant score tied to real delivered products. |
 | Driver approaching pickup | Merchant can receive a near-arrival notification when the assigned driver is close to pickup. | Thresholds are admin-configurable by distance and/or ETA; each stop/event is sent once and deduplicated by order, stop, and event type. |
+
+### Merchant Working Hours and Busy Rules
+
+| Rule | Requirement |
+|---|---|
+| Business Hours | One validated `opensAt`/`closesAt` pair in `Africa/Cairo` is applied identically to all seven days. Overnight hours are allowed when closing time is earlier than opening time. Existing Merchants remain on compatible manual behavior until scheduling is enabled. |
+| Open | Clears a temporary Busy state and requests normal acceptance, but cannot bypass a closed schedule window, Admin lock, or unavailable account. |
+| Closed | Stops new orders until the Merchant explicitly selects Open and the higher-priority rules permit it. |
+| Busy | Stops new orders for 30–720 minutes in multiples of 30, displays the expected return time, and expires automatically from server time. |
+| Admin control | Authorized Admin can edit schedule/state/Busy and apply or clear a force-closed lock with a required reason and immutable audit. Merchant cannot clear the Admin lock. |
+| Customer message | Busy and scheduled closure expose a safe status and next return/open time when known. Internal Admin reasons are never exposed. |
+| Enforcement | Catalog visibility is not enforcement. Preview, create, draft edit/retry, checkout, and weekly materialization revalidate every distinct Merchant before side effects; multi-Merchant failure is atomic. |
 
 ### Merchant Preparation-Time Metrics
 
@@ -293,12 +334,12 @@ Preparation-time stats must ignore cancelled/rejected/timeout-cancelled merchant
 
 | Section | Admin Work |
 |---|---|
-| Overview / monitor | Track marketplace KPIs, delayed orders, active customers, online drivers, and open merchants. |
+| Overview / monitor | Track marketplace KPIs, delayed orders, active customers, online drivers, and Merchants split into Open, Busy, Scheduled Closed, Manual Closed, Admin Closed, and Account Unavailable. |
 | Approvals | Review merchant and driver onboarding requests. |
 | Staff permissions | Super Admin creates staff accounts and selects allowed dashboard sections. |
 | Categories | Create and manage platform categories and subcategories. |
 | Zones and locations | Manage service zones, account zone assignment, Google Maps/API readiness, live tracking thresholds, and stored lat/lng location snapshots when needed. |
-| Accounts | Browse customers, merchants, drivers; suspend/reactivate where allowed. Merchant account lists should expose fastest, slowest, and average preparation-time metrics. |
+| Accounts | Browse customers, merchants, drivers; suspend/reactivate where allowed. Merchant lists expose preparation metrics plus effective availability, next transition/open, Busy-until, and filters. Authorized staff can edit weekly hours/Open/Closed/Busy or apply a separate audited Admin force-close lock. |
 | Ratings and quality | Monitor merchant-product bundle ratings and derived product/merchant aggregates; audit inappropriate comments; trigger safe recomputation if required. |
 | Finance | Configure merchant/driver commission defaults and overrides, merchant commission-free order threshold defaults/overrides, coupon/birthday merchant-contribution percentages, driver-to-merchant payout rules, daily driver credits, delivery fee pricing, invoices, credits, and payment instructions. |
 | Flash sales | Configure free launches on/off, free launch count/duration/renewal, paid weekly plan count/duration/price, and billing rules. |
@@ -458,7 +499,7 @@ Coupon example:
 
 ### Tasks and Rewards
 
-Tasks & Rewards is an approved USD 350 addition for the Customer App and Admin Dashboard. It is planned in Agent Pack Phase 49 and is not an active API/frontend claim until the Phase 49 runtime, Postman, surface, and acceptance gates pass.
+Tasks & Rewards is an approved USD 350 addition for the Customer App and Admin Dashboard. The Phase 49 versioned Admin authoring/lifecycle domain, server-owned progress projection, customer-bound voucher lifecycle, authoritative checkout/cancellation/delivery integration, eleven permission/ownership-gated APIs, their active Postman/security closure, and the bounded non-production capacity harness are implemented locally. Analytics, representative capacity evidence, and all frontend surfaces remain open.
 
 | Rule | Requirement |
 |---|---|
@@ -718,7 +759,7 @@ Yalla Halan uses separate settlement rules for merchants and drivers.
 | Commission base | Completed driver delivery value/earnings for the day. |
 | Commission percent | Driver custom percent if set; otherwise global driver default. |
 | Platform-funded credits | The platform-funded coupon, birthday, and free-delivery shares are shown separately and reduce the compulsory driver daily invoice because the driver paid the merchant those platform-funded amounts. |
-| Discount incompatibility | Coupon-code and birthday loyalty discounts cannot coexist. Either positive discount suppresses free delivery; a conflicting checkout returns `ORDER_DISCOUNT_BENEFIT_CONFLICT` with `suggestedAction=remove_coupon`. Cashback redemption remains separate and may coexist under its merchant-funded admin rules. |
+| Discount incompatibility | A normal coupon, task-reward code, birthday loyalty discount, and automatic free-delivery benefit are mutually exclusive order benefits. A conflicting checkout returns `ORDER_DISCOUNT_BENEFIT_CONFLICT`; valid cashback-point redemption remains separate and may coexist. |
 | Payment methods | Wallet or InstaPay inside the app with receipt image upload; or cash at Yalla Halan headquarters. |
 | Admin cash handling | If paid cash at headquarters, admin drops/settles the driver invoice from the dashboard with audit note and settlement actor. |
 | Total due | Gross daily driver/platform liability minus platform-funded credits. Any excess credit remains explicit instead of disappearing at a zero floor. |
@@ -778,6 +819,7 @@ Internal platform SOS is separate from a phone call and from the customer chat-a
 | Experience and leaderboard | Spendable balance and lifetime experience are separate; redemption does not reduce experience; Top 10, signed-in true rank, profile access, and delivered-order statistics are correct. |
 | Social activity rewards | Four independent activity types, automatic official verification first, manual exception only when permitted and necessary, provider-policy disablement, configurable points/limits, and idempotent duplicate prevention are clear. |
 | Tasks and rewards | Server-owned delivered-order/spend progress, Admin-authored targets, one customer-bound code, two allowed reward types, expiry/reservation/restoration, platform funding, and benefit exclusivity are clear. |
+| Merchant availability | Weekly Cairo-time hours, explicit Open/Closed/Busy, Busy expiry/cancel, Admin lock/audit, customer next-open messaging, stale-cart recovery, and fail-closed preview/create/weekly enforcement are clear. |
 | Support assistant | Published knowledge only, safe failure, human handoff, tenant privacy, and no operational action permissions. |
 | Ratings | One merchant-product experience score per delivered merchant portion is distributed to unique purchased products; there is no separate per-product input. |
 | Privacy and handoff | Hidden customer phone, audited disclosure, driver DND boundaries, and door/building-entrance choice are clear. |
@@ -807,6 +849,7 @@ This part gives implementation teams enough detail to build and test correctly.
 | Auth and accounts | OTP, login, approval, suspension, role access. |
 | Catalog | Categories, subcategories, products, offers, favorites, merchant pages. |
 | Orders | Draft, checkout, merchant portions, preparation, driver assignment, delivery, status projections. |
+| Merchant availability | One weekly Business Hours pair, idempotent manual state, temporary Busy, Admin lock, server-owned internal version/audit, effective-state projection, and new-order enforcement. |
 | Finance | Commissions, weekly invoices, flash-sale costs, receipts/proofs, overdue handling. |
 | Promotions | Coupons, eligible free-delivery promotions, flash sales, product offers. |
 | Cashback and experience points | Spendable balance/history, redemption preview, reserve/commit/restore/reverse, plus lifetime experience that does not decrease on redemption. |
@@ -828,14 +871,14 @@ This part gives implementation teams enough detail to build and test correctly.
 | User Type | Access Model |
 |---|---|
 | Customer | Own profile, addresses, orders, chat, points/rank/share requests, the global Top 10, limited public profiles of Top 10 customers, and own task progress/reward codes only. |
-| Merchant | Own store, own categories, own products, own order portions, own invoices. |
+| Merchant | Own store, own categories, own products, own order portions, own invoices, and own weekly hours/Open/Closed/Busy controls; cannot clear an Admin availability lock. |
 | Driver | Own profile, eligible orders, assigned order steps, own invoices. |
 | Admin Staff | Only assigned dashboard sections. |
 | Super Admin | All dashboard sections and staff management. |
 
 Admin dashboard action/data-scope labels are descriptive metadata for dashboard rendering. Backend authorization remains section-based through `allowedSections[]`; Super Admin access is implicit for all sections.
 
-Knowledge publishing, social reward configuration, provider-capability review, permitted manual exceptions, `tasks_rewards` authoring/support lookup, and emergency-number management require explicit Admin sections/permissions and audit events. Support staff receive only the minimum converted conversation context needed to assist the customer. The AI assistant itself receives no operational permission.
+Knowledge publishing, social reward configuration, provider-capability review, permitted manual exceptions, `tasks_rewards` authoring/support lookup, Merchant schedule/state/Busy/Admin-lock mutation through `merchant_availability`, and emergency-number management require explicit Admin sections/permissions and audit events. Read-only `accounts` access alone cannot mutate Merchant availability. Support staff receive only the minimum converted conversation context needed to assist the customer. The AI assistant itself receives no operational permission.
 
 [Back to top](#top)
 
@@ -862,6 +905,7 @@ Knowledge publishing, social reward configuration, provider-capability review, p
 17. Customer phone visibility controls whether merchant/driver direct-call is allowed.
 18. Product line items with active size choices must snapshot the selected `Standard`/`S`/`M`/`L` option, label, and unit price at draft/order creation. Server-side pricing remains authoritative.
 19. A delivered order may contribute once to each eligible published task revision. Task progress and reward issuance use server-owned final order values and unique source-order keys; customer payloads cannot advance progress.
+20. Every new-order preview, create, edit/retry, checkout confirmation, and weekly materialization revalidates the effective state of every distinct Merchant from server time. If any portion is unavailable, creation fails atomically before benefit reservation or other side effects; already accepted orders continue.
 
 ### Merchant Preparation-Time Metrics Rules
 
@@ -1092,11 +1136,12 @@ Exact endpoints belong in backend API docs and Postman. This PRD defines behavio
 | Group | QA Focus |
 |---|---|
 | Orders | Draft, checkout, merchant portions, merchant cap default 4 and admin override, merchant rejection reasons, merchant-response timeout cancellations, repricing after cancelled portions, Google route/delivery snapshots, readiness, driver assignment, live tracking, near-arrival events, completion. |
+| Merchant availability | One Cairo Start/End pair for the whole week, idempotent Open/Closed/Busy source and effective state, Admin force-close/audit, customer badges/next-open, legacy-toggle migration, direct-payload/stale-cart/multi-Merchant/weekly enforcement, and no benefit consumption on rejection. Internal versioning remains server-owned; client availability mutations carry no version. Domain foundation/migration/evaluator, Merchant-owner/Admin APIs, central enforcement, and active Postman/security assurance are implemented; frontend and live gates remain open. |
 | Ratings and reputation | Delivered-order rating, one score per delivered merchant portion, product fan-out, product averages, merchant aggregate from product ratings, duplicate-rating prevention, and rejected/cancelled/timeout portion exclusion. |
 | Merchant categories | List assigned categories only, hide merchant add/edit/remove controls, and validate product binding to admin-assigned categories. |
 | Finance | Commission defaults/overrides, invoices, proof upload, flash-sale costs. |
 | Promotions | Coupons, flash sales, product offers, and eligible free-delivery subsidy. |
-| Tasks and rewards | Admin lifecycle/revision controls, delivered-order progress, customer-only reads, exactly-once personal code issuance, checkout validation/reservation/redemption/restoration, funding snapshots, reports, and negative concurrency/ownership tests. These routes are planned, not active, until Phase 49 promotion. |
+| Tasks and rewards | Admin lifecycle/revision controls, delivered-order progress, customer-only reads, exactly-once personal voucher issuance, checkout validation/reservation/redemption/restoration, platform-funded order/settlement snapshots, and eleven-route static security/Postman assurance are active locally. Analytics, current load evidence, and frontend remain open. |
 | Cashback, experience, and leaderboard | Spendable balance/history, redemption preview, commit/restore/reverse, lifetime experience, Top 10, signed-in true rank, redemption not reducing experience, allowed profiles/statistics, and idempotent policy-gated social activity rewards. |
 | Weekly orders | Create from recent order or new builder, full cart replacement, snapshot save/edit/toggle/delete, Order Now, reminder materialization, unavailable-item handling, explicit checkout confirmation. |
 | Google Maps / Routes | Customer/merchant pin flows, Google Maps helpers, Google Routes distance/ETA/delivery fee snapshots, multi-stop route updates. |
@@ -1168,7 +1213,8 @@ Verification should include install, build, lint, tests, seeded live smoke, and 
 - Customer checkout has no electronic-payment flow in this release. Wallet/InstaPay proof upload is only for merchant/driver settlement with the platform.
 - `/api/v1` is canonical. `/api` may remain only as a documented compatibility alias.
 - Current frontend PDFs are UI references, not runnable surfaces; production completion requires actual customer, merchant, driver, and admin source plus verification.
-- Phase 48 AI/XP-social/emergency routes are locally implemented. Phase 49 Tasks & Rewards routes do not exist yet and must remain outside active Postman/inventory claims until implemented and tested.
+- Phase 48 AI/XP-social/emergency routes and eleven Phase 49 Tasks & Rewards routes (eight Admin authoring/lifecycle, two customer progress reads, and one owned voucher read) are locally implemented, inventoried, and represented in active role/All-UI Postman collections. Analytics is not active yet.
+- Phase 50 Merchant working-hours/Open/Closed/Busy/Admin-control domain foundation, deterministic evaluator, audit model, compatibility migration, Merchant-owner/Admin read/mutation/audit APIs, central catalog/order/weekly enforcement, and active Postman/security assurance are implemented through `backend_293`. The current Boolean remains a compatibility projection; supplied Merchant screens 96–105 are mapped to `merchant_052`–`merchant_054`, while frontend runtime and live transaction evidence remain open.
 - Seeded live smoke is not a full API coverage claim.
 - The full live API matrix requires a MongoDB test replica set because some registration paths use MongoDB transactions.
 - If MongoDB is reachable but standalone and reports `replicaSet: null`, the full matrix is blocked/skipped, not passed.
